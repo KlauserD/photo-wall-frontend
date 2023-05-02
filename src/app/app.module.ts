@@ -1,18 +1,40 @@
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { OrgChartModule } from 'angular13-organization-chart';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AuthInterceptor } from './auth.interceptor';
+import { EmployeeHierarchyComponent } from './employee-hierarchy/employee-hierarchy.component';
+import { EmployeeHierarchyItemComponent } from './employee-hierarchy-item/employee-hierarchy-item.component';
+import { CurrentZdFsjComponent } from './current-zd-fsj/current-zd-fsj.component';
+// import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { PhotowallPageComponent } from './photowall-page/photowall-page.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    EmployeeHierarchyComponent,
+    EmployeeHierarchyItemComponent,
+    CurrentZdFsjComponent,
+    PhotowallPageComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    OrgChartModule,
+    PdfViewerModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide : HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi   : true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

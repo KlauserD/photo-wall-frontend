@@ -18,6 +18,12 @@
     "@angular/platform-browser": "~13.0.0",
     "@angular/platform-browser-dynamic": "~13.0.0",
     "@angular/router": "~13.0.0",
+    "angular13-organization-chart": "^2.0.0",
+    "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.3",
+    "jquery": "^3.6.4",
+    "keen-slider": "^6.8.5",
+    "ng2-pdf-viewer": "^9.1.5",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

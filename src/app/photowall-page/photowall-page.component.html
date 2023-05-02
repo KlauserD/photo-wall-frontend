@@ -1,0 +1,21 @@
+photowallpage
+<div class="keen-slider h-100" #sliderPdfRef >
+    <div *ngFor="let pdfDocRow of photowallPage.preparedPdfDocuments" class="keen-slider__slide h-100">
+        <div class="d-flex flex-column">
+            <h2 class="text-center">{{photowallPage.title}}</h2>
+            <div class="row flex-grow-1">
+                <div *ngFor="let pdfDoc of pdfDocRow" class="col-6">
+                    <div class="h-100 d-flex flex-column">
+                        <h4 class="text-center">{{pdfDoc.title}}</h4>
+                        <div class="flex-grow-1">
+                            <pdf-viewer class="h-100" [src]="pdfDoc.fileUrl"
+                                [original-size]="true" [fit-to-page]="true" [zoom]="0.95" [zoom-scale]="'page-fit'"
+                                [show-all]="false"></pdf-viewer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,17 @@
+<div class="p-3">
+    <h2 class="text-center">Organigramm</h2>
+
+    <div class="row justify-content-center">
+        <angular-org-chart *ngFor="let roleRoot of roleTreeRoots" [nodeTemplate]="nodeTemplate" [data]="roleRoot" #exampleChart="orgChart">
+    
+        </angular-org-chart>
+        
+        <ng-template #nodeTemplate let-node>
+            <app-employee-hierarchy-item
+                [node]="node"
+                [showPicture]="true"
+                (roleClickedEvent)="SelectRole($event)"
+            ></app-employee-hierarchy-item>
+        </ng-template>
+    </div>
+</div>

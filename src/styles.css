@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+.normal-node {
+    background-color: none !important;
+}
+
+.color-node {
+    background-color: rgba(217, 87, 89, 0.153) !important;
+}
+
+.ng13-org-chart-entity {
+    margin: 0 0.5em !important;
+}
