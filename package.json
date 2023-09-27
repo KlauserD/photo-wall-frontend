@@ -21,6 +21,7 @@
     "angular13-organization-chart": "^2.0.0",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
+    "cross-env": "^7.0.3",
     "jquery": "^3.6.4",
     "keen-slider": "^6.8.5",
     "ng2-pdf-viewer": "^9.1.5",

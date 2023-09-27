@@ -1,58 +1,30 @@
-<!-- <div id="carousel1" class="carousel carousel-dark slide" style="height: 100vh;" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carousel1" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#carousel1" data-bs-slide-to="1"></button>
-    </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active" data-bs-interval="10000">
-            <div class="container-fluid">
-                <div class="m-3">
-                    <app-employee-hierarchy></app-employee-hierarchy>    
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item" data-bs-interval="10000">
-            <div class="container-fluid">
-                <div class="m-3">
-                    <app-current-zd-fsj></app-current-zd-fsj> 
-                </div>
-            </div>
-        </div>
-    </div>
-    <button hidden id="btn-left" class="carousel-control-prev" type="button" data-bs-target="#carousel1" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button hidden id="btn-right" class="carousel-control-next" type="button" data-bs-target="#carousel1" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div> -->
-
-{{photowallPages.length}}
-
 <div class="keen-slider first" #sliderRef>
     <div class="keen-slider__slide slide-height">
-        <app-employee-hierarchy></app-employee-hierarchy>
+        <app-employee-hierarchy 
+            [slideNumber]="0" 
+            [currentSlideNumber]="currentSlideNumber"
+        ></app-employee-hierarchy>
     </div>
     <div class="keen-slider__slide slide-height">
         <app-current-zd-fsj></app-current-zd-fsj> 
     </div>
 
-
-    <div *ngFor="let pwp of photowallPages" class="keen-slider__slide slide-height">
-        <app-photowall-page [photowallPage]="pwp"></app-photowall-page>
+    <div *ngFor="let pwp of photowallPages; let idx = index" class="keen-slider__slide slide-height">
+        <app-photowall-page 
+            [photowallPage]="pwp"
+            [slideNumber]="2 + idx"
+            [currentSlideNumber]="currentSlideNumber"
+        ></app-photowall-page>
     </div>
 
-
-    <div class="keen-slider__slide number-slide4">4</div>
-    <div class="keen-slider__slide number-slide5">5</div>
-    <div class="keen-slider__slide number-slide6">6</div>
 </div>
-  <div class="dots">
-    <button
-      *ngFor="let slideIdx of [0,1,2,3,4,5]"
-      (click)="slider.moveToIdx(slideIdx)"
-      [class]="'dot ' + (slideIdx === currentSlide ? 'active' : '')"
-    ></button>
-  </div>
+
+<app-timed-progress-bar (timerExpired)="moveToNextSlide()"></app-timed-progress-bar>
+
+<div class="dots">
+  <button
+    *ngFor="let slideIdx of slideCountArray"
+    (click)="slider.moveToIdx(slideIdx)"
+    [class]="'dot ' + (slideIdx === currentSlideNumber ? 'active' : '')"
+  ></button>
+</div>

@@ -4,6 +4,8 @@ import { Observable, catchError, map, of } from 'rxjs';
 import { Role } from '../interfaces/role';
 import { environment } from 'src/environments/environment';
 import { EmployeesService } from './employees.service';
+import { EmpPhotoCollectionService } from './emp-photo-collection.service';
+import { Employee } from '../interfaces/employee';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,8 @@ export class RoleService {
 
   constructor(
     private http: HttpClient,
-    private employeesService: EmployeesService
+    private employeesService: EmployeesService,
+    private empPhotoCollectionService: EmpPhotoCollectionService
   ) { }
 
   private errorHandler(error: Error | any): Observable<any> {
@@ -27,6 +30,30 @@ export class RoleService {
     if(role.employee.data) {
       this.employeesService.getById(role.employee.data.id)
           .subscribe(emp => (role as Role).employee = emp);
+    }
+
+    if(role.employee_photo_collection.data) {
+      this.empPhotoCollectionService.getByPictureUrlsById(role.employee_photo_collection.data.id)
+          .subscribe(coll => {
+            (role as Role).employeePictures = coll;
+            if(role.children.length == 0) {
+              console.log('pushing ...');
+              role.children.push({
+                id: 'xxx',
+                employee: undefined as any,
+                isSelected: false,
+                name: role.name + ' - children',
+                substitution: false,
+                superrole: role,
+                hideChildren: false,
+                children: [],
+                depth: role.depth + 1,
+                employeePictures: role.employeePictures,
+                isPictureCollectionNode: true
+              } as Role);
+            }
+            console.log('role: ', role);
+          });
     }
 
     role.id = roleObj.id;

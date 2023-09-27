@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, firstValueFrom, map, of, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PhotowallPage } from '../interfaces/photowall-page';
 import { PdfDocument } from '../interfaces/pdf-document';
@@ -22,9 +22,10 @@ export class PdfService {
   private mapToPdfDocument(pdfDocObj: any): PdfDocument {
     let pdfDoc = pdfDocObj['attributes'];
 
-    pdfDoc.fileUrl = pdfDoc.file.data.attributes.url;
+    pdfDoc.fileUrl = environment.uploadUrl.concat(pdfDoc.file.data.attributes.url);
 
     pdfDoc.id = pdfDocObj.id;
+
     return pdfDoc;
   }
 
@@ -37,16 +38,16 @@ export class PdfService {
       );
   }
 
-  private mapToPhotowallPage(photowallPageObj: any): PhotowallPage {
+  private async mapToPhotowallPage(photowallPageObj: any): Promise<PhotowallPage> {
     let photowallPage = photowallPageObj['attributes'];
-
-    console.log(photowallPage);
 
     photowallPage.pdfDocuments = photowallPage.pdf_documents.data ?? [];
 
-    (photowallPage.pdfDocuments as any[]).forEach((pdfDoc, idx) => {
-      this.getPdfDocumentById(pdfDoc.id).subscribe((pdfDoc: PdfDocument) => photowallPage.pdfDocuments[idx] = pdfDoc);
-    });
+    for (let i = 0; i < (photowallPage.pdfDocuments as any[]).length; i++) {
+      const pdfDoc = (photowallPage.pdfDocuments as any[])[i];
+      
+      (photowallPage.pdfDocuments as any[])[i] = await firstValueFrom(this.getPdfDocumentById(pdfDoc.id));
+    }
 
     photowallPage.id = photowallPageObj.id;
     return photowallPage;
@@ -59,7 +60,8 @@ export class PdfService {
           populate: '*'
         }
       }).pipe(
-        map(res => res['data'].map((zdObj: any) => this.mapToPhotowallPage(zdObj))), 
+        map(res => res['data']),
+        switchMap(data => Promise.all(data.map(async (zdObj: any) => await this.mapToPhotowallPage(zdObj)))),
         catchError(this.errorHandler)
       );
   }

@@ -1,21 +1,46 @@
-photowallpage
-<div class="keen-slider h-100" #sliderPdfRef >
-    <div *ngFor="let pdfDocRow of photowallPage.preparedPdfDocuments" class="keen-slider__slide h-100">
-        <div class="d-flex flex-column">
-            <h2 class="text-center">{{photowallPage.title}}</h2>
-            <div class="row flex-grow-1">
-                <div *ngFor="let pdfDoc of pdfDocRow" class="col-6">
-                    <div class="h-100 d-flex flex-column">
-                        <h4 class="text-center">{{pdfDoc.title}}</h4>
-                        <div class="flex-grow-1">
-                            <pdf-viewer class="h-100" [src]="pdfDoc.fileUrl"
-                                [original-size]="true" [fit-to-page]="true" [zoom]="0.95" [zoom-scale]="'page-fit'"
-                                [show-all]="false"></pdf-viewer>
-                        </div>
-                    </div>
-                </div>
+<div class="d-flex flex-column h-100 p-3">
+    <h2 class="text-center">{{photowallPage.title}}</h2>
+    <div class="flex-grow-1">
+        <div class="keen-slider h-100" #sliderPdfRef>
+
+            <div *ngIf="showInitialPdf" class="keen-slider__slide h-100">
+                <pdf-viewer class="h-100" [src]="photowallPage.pdfDocuments[0].fileUrl" page="1" (pages-initialized)="InitialPagesInitialized($event, photowallPage.pdfDocuments[0])"
+                        [original-size]="false" [fit-to-page]="true" [zoom]="0.95" [zoom-scale]="'page-fit'"
+                        [show-all]="false"></pdf-viewer>
             </div>
+            <div *ngFor="let pageNumber of pageNumbers[photowallPage.pdfDocuments[0].id]" class="keen-slider__slide h-100">
+                <pdf-viewer class="h-100" [src]="photowallPage.pdfDocuments[0].fileUrl" [page]="pageNumber" (pages-initialized)="RestPagesInitialized()"
+                        [original-size]="false" [fit-to-page]="true" [zoom]="0.95" [zoom-scale]="'page-fit'"
+                        [show-all]="false"></pdf-viewer>
+            </div>
+
+            <!-- <div class="keen-slider__slide h-100 number-slide4">Slider 2</div>
+            <div class="keen-slider__slide h-100 number-slide5">Slider 2</div>
+            <div class="keen-slider__slide h-100 number-slide6">Slider 2</div> -->
         </div>
     </div>
 </div>
 
+<!-- <div class="keen-slider h-100" style="min-width: 100%; max-width: 100%" #sliderPdfRef >
+    <div *ngFor="let pdfDoc of photowallPage.pdfDocuments" class="keen-slider__slide h-100">
+        <div class="d-flex flex-column h-100 p-3">
+            <h2 class="text-center">{{photowallPage.title}}</h2>
+            <div class="flex-grow-1">
+
+                <div class="keen-slider third h-100" #sliderPdfPagesRef>
+                    <div class="keen-slider__slide h-100">
+                        <pdf-viewer class="h-100" [src]="pdfDoc.fileUrl" page="1" (pages-initialized)="PagesInitialized($event, pdfDoc)"
+                                [original-size]="false" [fit-to-page]="true" [zoom]="0.95" [zoom-scale]="'page-fit'"
+                                [show-all]="false"></pdf-viewer>
+                    </div>
+                    <div *ngFor="let pageNumber of pageNumbers[pdfDoc.id]" class="keen-slider__slide number-slide5 h-100">
+                        {{pageNumber+1}}
+                    </div>
+                    <div class="keen-slider__slide h-100 number-slide5">Slider 2</div>
+                    <div class="keen-slider__slide h-100 number-slide5">Slider 2</div>
+                    <div class="keen-slider__slide h-100 number-slide5">Slider 2</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

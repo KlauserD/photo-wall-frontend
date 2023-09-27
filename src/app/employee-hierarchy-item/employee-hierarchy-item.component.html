@@ -1,8 +1,5 @@
-<div class="card" (click)="roleClicked(node)" [style]="node?.isSelected ? 'background-color: rgba(217, 87, 89, 0.153);' : ''">
+<!-- <div class="card" (click)="roleClicked(node)" [style]="node?.isSelected ? 'background-color: rgba(217, 87, 89, 0.153);' : ''">
     <div class="g-0 card-body">
-        <!-- <div class="progress mb-1" style="height: 3px;">
-            <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-        </div> -->
         <div class="d-flex flex-wrap">
             <div *ngIf="showPicture && node?.employee?.pictureUrl" style="max-height: 80px;" class="d-flex align-items-center mb-2 me-2">
                 <img [src]="node?.employee?.pictureUrl" style="max-height: 80px;" class="img-fluid rounded-start" alt="...">
@@ -19,4 +16,50 @@
     <div *ngIf="node?.children?.length != 0 && node?.hideChildren" class="d-flex justify-content-center">
         <i class="bi bi-diagram-3 text-success"></i>
     </div>
+</div> -->
+
+<div *ngIf="!node.isPictureCollectionNode" class="card" 
+     (click)="roleClicked(node)" [style]="node?.isSelected ? 'background-color: rgba(217, 87, 89, 0.153);' : ''"
+>
+    <div class="row g-0">
+        <div *ngIf="showPicture && 
+                node?.employee?.pictureUrl &&
+                (node.superrole == undefined ||
+                node?.superrole?.children?.length && node.superrole.children.length <= 6)" class="col">
+            <div style="height: 100px">
+                <img [src]="node?.employee?.pictureUrl" style="height: 100px" class="img-fluid rounded-start" alt="...">
+            </div>
+        </div>
+        
+        <div class="col">
+            <div class="card-body p-2">
+                <b class="card-title mb-1" style="font-size: 13px; line-height: 15px; display: block;">{{node?.name}}</b>
+                <div class="text" style="font-size: 12px;">{{node?.employee?.name}}</div>
+            </div>
+            <div *ngIf="node?.children?.length != 0 && node?.hideChildren" class="d-flex justify-content-center">
+                <i class="bi bi-diagram-3 text-success"></i>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div *ngIf="node.isPictureCollectionNode">
+    <div class="d-flex justify-content-between py-2">
+        <div *ngFor="let empPic of node.employeePictures" class="card mx-4" style="height: max-content">
+            <div class="card-body p-2">
+                <b class="card-title text-center" style="font-size: 13px; line-height: 15px; display: block;">{{empPic.name}}</b>
+            
+                <img [src]="empPic.url" style="max-width: 120px; max-height: 90px;" class="img-fluid rounded-start" alt="...">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="keen-slider" #empSliderRef>
+    <div class="keen-slider__slide number-slide1">1</div>
+    <div class="keen-slider__slide number-slide2">2</div>
+    <div class="keen-slider__slide number-slide3">3</div>
+    <div class="keen-slider__slide number-slide4">4</div>
+    <div class="keen-slider__slide number-slide5">5</div>
+    <div class="keen-slider__slide number-slide6">6</div>
+  </div>

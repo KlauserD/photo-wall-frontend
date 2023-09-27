@@ -3,6 +3,7 @@ import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 import { PhotowallPage } from './shared/interfaces/photowall-page';
 import { PdfService } from './shared/services/pdf.service';
 import { PdfDocument } from './shared/interfaces/pdf-document';
+import { TimeScheduleService } from './shared/services/time-schedule.service';
 
 @Component({
   selector: 'app-root',
@@ -17,19 +18,25 @@ export class AppComponent {
 
   @ViewChild("sliderRef") sliderRef: ElementRef<HTMLElement> = {} as ElementRef<HTMLElement>;
 
-  currentSlide: number = 2;
+  currentSlideNumber: number = 0;
   dotHelper: Array<Number> = [];
   slider: KeenSliderInstance = {} as KeenSliderInstance;
 
   photowallPages: PhotowallPage[] = [];
 
+  slideCountArray: number[] = [];
+
   constructor(
     private pdfService: PdfService,
-    private changeDetectionRef: ChangeDetectorRef
+    private changeDetectionRef: ChangeDetectorRef,
+    private timeScheduleService: TimeScheduleService
   ) {
     this.pdfService.getPhotowallPages().subscribe(pwp => {
       this.photowallPages = this.preparePdfDocArrays(pwp);
-      changeDetectionRef.reattach();
+      setTimeout(() => this.slider.update(), 200);
+      this.slideCountArray = Array(this.photowallPages.length + 2).fill(0).map((x, i) => i)
+
+      this.timeScheduleService.SetPageTimer(10);
     });
   }
 
@@ -40,6 +47,7 @@ export class AppComponent {
   private preparePdfDocArrays(photowallPages: PhotowallPage[]): PhotowallPage[] {
     photowallPages.forEach(pwp => {
       const pdfsPerPage = 3;
+
       let tmpPdfCount = 0;
 
       // init 
@@ -51,7 +59,7 @@ export class AppComponent {
       // fill
       for (let i = 0; i < pwp.pdfDocuments.length; i++) {
         const pdfDoc = pwp.pdfDocuments[i];
-        
+
         newPdfDocArray[Math.floor(i / pdfsPerPage)][tmpPdfCount] = pdfDoc;
         tmpPdfCount = (tmpPdfCount + 1) % pdfsPerPage;
       }
@@ -63,9 +71,12 @@ export class AppComponent {
   ngAfterViewInit() {
     this.slider = new KeenSlider(this.sliderRef.nativeElement, {
       loop: true,
-      initial: this.currentSlide,
+      initial: this.currentSlideNumber,
+      slides: {
+        origin: "center",
+      },
       slideChanged: (s) => {
-        this.currentSlide = s.track?.details?.rel
+        this.currentSlideNumber = s.track?.details?.rel;
       },
       selector: ".first > .keen-slider__slide"
     });
@@ -78,9 +89,19 @@ export class AppComponent {
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if(event.key === 'ArrowLeft') {
-      this.slider.prev();
+      this.moveToPrevSlide();
     } else if(event.key === 'ArrowRight') {
-      this.slider.next();
+      this.moveToNextSlide();
     }
+  }
+
+  moveToPrevSlide() {
+    this.slider.prev();
+    this.timeScheduleService.SetPageTimer(10);
+  }
+
+  moveToNextSlide() {
+    this.slider.next();
+    this.timeScheduleService.SetPageTimer(10);
   }
 }

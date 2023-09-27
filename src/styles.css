@@ -10,3 +10,9 @@
 .ng13-org-chart-entity {
     margin: 0 0.5em !important;
 }
+
+.ng13-org-chart-entity-box {
+    max-width: 1000px !important;
+    background-color: white !important;
+    border: white !important;
+}

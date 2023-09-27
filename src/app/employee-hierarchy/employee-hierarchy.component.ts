@@ -1,9 +1,10 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Employee } from '../shared/interfaces/employee';
 import { EmployeesService } from '../shared/services/employees.service';
 import { Role } from '../shared/interfaces/role';
 import { RoleService } from '../shared/services/role.service';
 import { ChildActivationEnd } from '@angular/router';
+import { TimeScheduleService } from '../shared/services/time-schedule.service';
 
 @Component({
   selector: 'app-employee-hierarchy',
@@ -15,6 +16,9 @@ export class EmployeeHierarchyComponent implements OnInit {
   private NOT_TOUCHED_TIMEOUT = 5000;
   private SELECT_NEXT_NODE_TIMEOUT = 3000;
 
+  @Input() slideNumber: number = -1;
+  @Input() currentSlideNumber: number = -2;
+
   // employees: Employee[] = [];
   roleTreeRoots: Role[] = [];
 
@@ -25,7 +29,8 @@ export class EmployeeHierarchyComponent implements OnInit {
   memorisedNextRole: Role | undefined;
 
   constructor(
-    private roleService: RoleService  
+    private roleService: RoleService,
+    private timeScheduleService: TimeScheduleService
   ) { }
 
   ngOnInit(): void {
@@ -39,8 +44,9 @@ export class EmployeeHierarchyComponent implements OnInit {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if(event.key === 'ArrowDown') {
+    if(this.currentSlideNumber === this.slideNumber && event.key === 'ArrowDown') {
       this.SelectNextRole();
+      this.timeScheduleService.SetPageTimer(20);
     }
   }
 
@@ -66,8 +72,6 @@ export class EmployeeHierarchyComponent implements OnInit {
     let nextRole = this.memorisedNextRole ??
       this.FindNextExpandableNode(this.roleTreeRoots[0], currSelectedRole, {b: false});
     
-    console.log('next role: ', nextRole);
-    console.log('curr selected role ', currSelectedRole);
     if(nextRole == undefined) nextRole = this.roleTreeRoots[0];
 
     if(currSelectedRole && nextRole.depth <= currSelectedRole.depth) {
@@ -78,9 +82,6 @@ export class EmployeeHierarchyComponent implements OnInit {
     if(nextRole == this.memorisedNextRole) {
       this.memorisedNextRole = undefined;
     }
-
-    console.log('#2 next role: ', nextRole);
-    console.log('memorized role: ', this.memorisedNextRole);
 
     if(!nextRole) {
       this.StopTimeout();
@@ -94,7 +95,6 @@ export class EmployeeHierarchyComponent implements OnInit {
     if(foundCurr.b && parent.children.length != 0)  return parent;
     
     if(current == parent) {
-      console.log(current.name,' - current = ',parent.name, ' - parent');
       foundCurr.b = true;
     }
 
@@ -134,7 +134,6 @@ export class EmployeeHierarchyComponent implements OnInit {
         currSelectedRole.cssClass = 'normal-node';
 
         while(currSelectedRole && this.IsDescendent(currSelectedRole, selectedRole)) {
-          console.log(currSelectedRole.name, ' is descendent of ', selectedRole.name);
 
           const selectedRoleWithSiblings = (this.selectedRolesWithOriginalSiblings.pop() as {role: Role, originalSiblings: Role[]});
           this.GiveBackSiblings(selectedRoleWithSiblings.role, selectedRoleWithSiblings.originalSiblings);
@@ -194,10 +193,13 @@ export class EmployeeHierarchyComponent implements OnInit {
   }
 
   HideAllDescendants(role: Role) {
-    if(role.children.length != 0) {
-      role.children.forEach(child => this.HideAllDescendants(child));
+    if(!role.isPictureCollectionNode) {
+      if(role.children.length != 0) {
+        role.children.forEach(child => this.HideAllDescendants(child));
+      }
+      role.hideChildren = true;
     }
-    role.hideChildren = true;
+    
   }
 
 }

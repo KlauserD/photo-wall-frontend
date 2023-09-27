@@ -9,5 +9,8 @@ export interface Role extends OrgChartTreeNode {
     superrole: Role,
     depth: number,
 
+    isPictureCollectionNode: boolean,
+    employeePictures: {name: string, url: string}[], 
+
     children: Role[]
 }
