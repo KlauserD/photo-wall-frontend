@@ -48,7 +48,8 @@ export class RoleService {
                 children: [],
                 depth: role.depth + 1,
                 employeePictures: role.employeePictures,
-                isPictureCollectionNode: true
+                isPictureCollectionNode: true,
+                selector: 0
               } as Role);
             }
             console.log('role: ', role);

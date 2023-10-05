@@ -12,5 +12,6 @@ export interface Role extends OrgChartTreeNode {
     isPictureCollectionNode: boolean,
     employeePictures: {name: string, url: string}[], 
 
-    children: Role[]
+    children: Role[],
+    selector: number
 }

@@ -31,14 +31,18 @@
             </div>
         </div>
         
-        <div class="col">
-            <div class="card-body p-2">
+        <div class="col d-flex flex-column justify-content-between">
+            <div class="card-body p-2 pb-1">
                 <b class="card-title mb-1" style="font-size: 13px; line-height: 15px; display: block;">{{node?.name}}</b>
                 <div class="text" style="font-size: 12px;">{{node?.employee?.name}}</div>
             </div>
-            <div *ngIf="node?.children?.length != 0 && node?.hideChildren" class="d-flex justify-content-center">
-                <i class="bi bi-diagram-3 text-success"></i>
+            <div *ngIf="node.selector" class="d-flex justify-content-end px-1">
+                <b style="color: red; font-size: 18px">{{ node.selector?.toString()?.padStart(2, '0') }}</b>
             </div>
+            <!-- <div *ngIf="node?.children?.length != 0 && node?.hideChildren" class="d-flex justify-content-center">
+                <i class="bi bi-diagram-3 text-success"></i>
+                
+            </div> -->
         </div>
     </div>
 </div>

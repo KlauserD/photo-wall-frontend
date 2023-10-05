@@ -31,8 +31,8 @@ export class AppComponent {
     private changeDetectionRef: ChangeDetectorRef,
     private timeScheduleService: TimeScheduleService
   ) {
-    this.slideShowingTimes[0] = 15; // employee hierarchy
-    this.slideShowingTimes[1] = 15; // ZD/FSJ
+    this.slideShowingTimes[0] = 60; // employee hierarchy
+    this.slideShowingTimes[1] = 30; // ZD/FSJ
 
     this.pdfService.getPhotowallPages().subscribe(pwps => {
       this.photowallPages = pwps; // this.preparePdfDocArrays(pwp);

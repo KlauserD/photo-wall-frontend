@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnChanges, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { PdfService } from '../shared/services/pdf.service';
 import { PhotowallPage } from '../shared/interfaces/photowall-page';
 import { PdfDocument } from '../shared/interfaces/pdf-document';
@@ -14,7 +14,7 @@ import { PdfViewerComponent } from 'ng2-pdf-viewer';
     "../../../node_modules/keen-slider/keen-slider.min.css"
   ]
 })
-export class PhotowallPageComponent implements OnInit {
+export class PhotowallPageComponent implements OnInit, OnChanges {
 
   @Input() photowallPage: PhotowallPage = {} as PhotowallPage
   @Input() slideNumber: number = -1;
@@ -45,6 +45,12 @@ export class PhotowallPageComponent implements OnInit {
 
     // setTimeout(() => console.log(this.pdfComponents), 6000);
     // this.pdfComponent.pdfViewer.currentScaleValue = 'page-fit';
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ((changes as any).currentSlideNumber && this.currentSlideNumber == this.slideNumber) {
+      this.sliderPdf.moveToIdx(0);
+    }
   }
 
   @HostListener('window:keyup', ['$event'])
