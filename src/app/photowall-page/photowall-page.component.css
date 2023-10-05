@@ -36,3 +36,7 @@
     rgba(174, 63, 255, 1) 100%
   );
 }
+
+pdf-viewer {
+  height: 100vh;
+}

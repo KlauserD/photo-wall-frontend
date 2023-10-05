@@ -2,24 +2,33 @@
 <div class="p-3">
     <h2 class="text-center">Aktuelle ZDL-/FSJ-Turnus</h2>
 
-    <div class="mb-2" *ngFor="let rotation of rotations">
-        <h5 class="text-center">{{rotation.name}}</h5>
-    
-        <div class="row">
-            <div *ngFor="let zdFsj of rotation.zdFsjs" class="col p-1 ">
-                <div class="card shadow border border-secondary">
-                    <div class="g-0 card-body">
-                        <div class="d-flex flex-wrap">
-                            <div *ngIf="zdFsj?.pictureUrl" style="max-height: 70px;" class="d-flex align-items-center mb-2 me-2">
-                                <img [src]="zdFsj?.pictureUrl" style="max-height: 70px;" class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="d-flex flex-column justify-content-between">
-                                <div>
-                                    <b class="card-title">{{zdFsj?.name}}</b>
-                                </div>
-                                <div class="text text-muted">{{zdFsj?.assignmentShow}}</div>
-                            </div>
-                        </div>
+    <div class="mb-2" *ngFor="let turnus of turnuses">
+        <h4 class="text-center">{{turnus.year}}/{{turnus.month.toLocaleString('de-DE', {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}}</h4>
+
+
+        <div class="d-flex flex-wrap justify-content-center">
+            <div *ngFor="let empPic of turnus.pictures" class="card me-2 mb-2" style="height: max-content; width: max-content;" >
+                <div class="d-flex" style="width: max-content;">
+                    <div>
+                        <img [src]="empPic.url" 
+                            [style]="'max-width: ' + sizesForTurnusCount[turnuses.length].pictureWidth + 
+                                    'px; max-height: ' + sizesForTurnusCount[turnuses.length].pictureHeight + 'px;'" 
+                            class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="card-body py-1 px-2 d-flex flex-column justify-content-between">
+                        <b class="text-wrap" 
+                            [style]="'max-width: ' + sizesForTurnusCount[turnuses.length].pictureWidth + 
+                                    'px; font-size: ' + sizesForTurnusCount[turnuses.length].fontSize + 
+                                    'px; line-height: ' + sizesForTurnusCount[turnuses.length].lineHeight + 
+                                    'px; display: block; width: min-content;'">{{empPic.name}}</b>
+                        <span class="card-title text-muted mb-0" 
+                                [style]="'max-width: ' + sizesForTurnusCount[turnuses.length].pictureWidth + 
+                                        'px; font-size: ' + sizesForTurnusCount[turnuses.length].fontSize + 
+                                        'px; line-height: ' + sizesForTurnusCount[turnuses.length].lineHeight + 
+                                        'px; display: block; width: min-content;'">{{empPic.role}}</span>
                     </div>
                 </div>
             </div>

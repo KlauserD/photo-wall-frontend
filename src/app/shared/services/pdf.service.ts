@@ -41,15 +41,9 @@ export class PdfService {
   private async mapToPhotowallPage(photowallPageObj: any): Promise<PhotowallPage> {
     let photowallPage = photowallPageObj['attributes'];
 
-    photowallPage.pdfDocuments = photowallPage.pdf_documents.data ?? [];
-
-    for (let i = 0; i < (photowallPage.pdfDocuments as any[]).length; i++) {
-      const pdfDoc = (photowallPage.pdfDocuments as any[])[i];
-      
-      (photowallPage.pdfDocuments as any[])[i] = await firstValueFrom(this.getPdfDocumentById(pdfDoc.id));
-    }
-
+    photowallPage.pdfDocumentUrl = environment.uploadUrl.concat(photowallPage.pdfDocument.data.attributes.url);
     photowallPage.id = photowallPageObj.id;
+
     return photowallPage;
   }
 

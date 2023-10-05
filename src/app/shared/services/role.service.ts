@@ -37,7 +37,6 @@ export class RoleService {
           .subscribe(coll => {
             (role as Role).employeePictures = coll;
             if(role.children.length == 0) {
-              console.log('pushing ...');
               role.children.push({
                 id: 'xxx',
                 employee: undefined as any,

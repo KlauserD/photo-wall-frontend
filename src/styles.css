@@ -1,18 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+.ng13-org-chart-entity-box {
+    max-width: 1000px !important;
+    background: rgba(0,0,0,0) !important;
+    /* background-color: white !important; */
+    border: white !important;
+}
+
 .normal-node {
     background-color: none !important;
 }
 
 .color-node {
-    background-color: rgba(217, 87, 89, 0.153) !important;
+    background: rgba(220, 200, 200, 1) !important;
 }
 
 .ng13-org-chart-entity {
     margin: 0 0.5em !important;
 }
 
-.ng13-org-chart-entity-box {
-    max-width: 1000px !important;
-    background-color: white !important;
-    border: white !important;
-}

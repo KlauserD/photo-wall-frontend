@@ -46,7 +46,6 @@ export class EmployeeHierarchyComponent implements OnInit {
   keyEvent(event: KeyboardEvent) {
     if(this.currentSlideNumber === this.slideNumber && event.key === 'ArrowDown') {
       this.SelectNextRole();
-      this.timeScheduleService.SetPageTimer(20);
     }
   }
 

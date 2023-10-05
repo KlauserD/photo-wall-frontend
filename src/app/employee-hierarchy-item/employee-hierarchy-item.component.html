@@ -43,18 +43,6 @@
     </div>
 </div>
 
-<!-- <div *ngIf="node.isPictureCollectionNode">
-    <div class="d-flex justify-content-between py-2">
-        <div *ngFor="let empPic of node.employeePictures" class="card mx-4" style="height: max-content">
-            <div class="card-body p-2">
-                <b class="card-title text-center" style="font-size: 13px; line-height: 15px; display: block;">{{empPic.name}}</b>
-            
-                <img [src]="empPic.url" style="max-width: 120px; max-height: 90px;" class="img-fluid rounded-start" alt="...">
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <div *ngIf="node.isPictureCollectionNode" class="keen-slider py-1" #empSliderRef>
     <div *ngFor="let empPic of node.employeePictures" class="keen-slider__slide" style="width: 110px;">
         <div class="card" style="height: max-content; width: 110px;">
@@ -69,27 +57,3 @@
         </div>
     </div>
 </div>
-
-<!-- <div *ngIf="node.isPictureCollectionNode">
-    <div class="keen-slider" #empSliderRef>
-        <div *ngFor="let empPic of node.employeePictures" class="keen-slider__slide number-slide1 py-2">
-            <div class="card mx-2" style="height: max-content">
-                <div class="card-body p-2">
-                    <b class="card-title text-center" style="font-size: 13px; line-height: 15px; display: block;">{{empPic.name}}</b>
-                
-                    <img [src]="empPic.url" style="max-width: 120px; max-height: 90px;" class="img-fluid rounded-start" alt="...">
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div> -->
-
-<!-- <div class="keen-slider" #empSliderRef>
-    <div class="keen-slider__slide number-slide1">1</div>
-    <div class="keen-slider__slide number-slide2">2</div>
-    <div class="keen-slider__slide number-slide3">3</div>
-    <div class="keen-slider__slide number-slide4">4</div>
-    <div class="keen-slider__slide number-slide5">5</div>
-    <div class="keen-slider__slide number-slide6">6</div>
-  </div> -->

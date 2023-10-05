@@ -1,9 +1,10 @@
-import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { PdfService } from '../shared/services/pdf.service';
 import { PhotowallPage } from '../shared/interfaces/photowall-page';
 import { PdfDocument } from '../shared/interfaces/pdf-document';
 import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 import { TimeScheduleService } from '../shared/services/time-schedule.service';
+import { PdfViewerComponent } from 'ng2-pdf-viewer';
 
 @Component({
   selector: 'app-photowall-page',
@@ -16,19 +17,16 @@ import { TimeScheduleService } from '../shared/services/time-schedule.service';
 export class PhotowallPageComponent implements OnInit {
 
   @Input() photowallPage: PhotowallPage = {} as PhotowallPage
-  // @Input() slider: KeenSliderInstance = {} as KeenSliderInstance;
   @Input() slideNumber: number = -1;
   @Input() currentSlideNumber: number = -2;
 
   @ViewChild("sliderPdfRef") sliderPdfRef: ElementRef<HTMLElement> = {} as ElementRef<HTMLElement>;
   sliderPdf: KeenSliderInstance = {} as KeenSliderInstance;
 
-  // @ViewChild("sliderPdfPagesRef") sliderPdfPagesRef: ElementRef<HTMLElement> = {} as ElementRef<HTMLElement>;
-  // sliderPdfPages: KeenSliderInstance = {} as KeenSliderInstance;
+  @ViewChildren(PdfViewerComponent)
+  private pdfComponents: QueryList<PdfViewerComponent> = {} as QueryList<PdfViewerComponent>;
 
   pageNumbers: any = {};
-
-  showInitialPdf: boolean = true;
 
   constructor(
     private timeScheduleService: TimeScheduleService
@@ -45,14 +43,14 @@ export class PhotowallPageComponent implements OnInit {
       }
     });
 
-    setTimeout(() => this.sliderPdf.update(), 5000);
+    // setTimeout(() => console.log(this.pdfComponents), 6000);
+    // this.pdfComponent.pdfViewer.currentScaleValue = 'page-fit';
   }
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if(this.slideNumber === this.currentSlideNumber && event.key === 'ArrowDown') {
       this.sliderPdf.next();
-      this.timeScheduleService.SetPageTimer(20);
     }
   }
 
@@ -60,14 +58,18 @@ export class PhotowallPageComponent implements OnInit {
     if (this.sliderPdf) this.sliderPdf.destroy()
   }
 
-  InitialPagesInitialized(event: any, pdfDoc: PdfDocument) {
+  InitialPagesInitialized(event: any, photowallPage: PhotowallPage) {
     const pageNumber = event.source.pdfDocument._pdfInfo.numPages;
 
-    this.pageNumbers[pdfDoc.id] = Array(pageNumber).fill(0).map((x, i) => i + 1);
+    if(pageNumber <= 3) this.sliderPdf.options.loop = false;
+
+    this.pageNumbers[photowallPage.id] = Array(pageNumber - 1).fill(0).map((x, i) => i + 2);
   }
 
   RestPagesInitialized() {
-    this.showInitialPdf = false;
+    this.sliderPdf.update();
+    window.dispatchEvent(new Event('resize'))
+    this.pdfComponents.forEach(pdfComp => pdfComp.pdfViewer.update());
   }
 
 }

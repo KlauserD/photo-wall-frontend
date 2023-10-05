@@ -18,54 +18,35 @@ export class AppComponent {
 
   @ViewChild("sliderRef") sliderRef: ElementRef<HTMLElement> = {} as ElementRef<HTMLElement>;
 
-  currentSlideNumber: number = 0;
-  dotHelper: Array<Number> = [];
   slider: KeenSliderInstance = {} as KeenSliderInstance;
+  currentSlideNumber: number = 0;
+  dotSlideIdxArray: number[] = [];
 
   photowallPages: PhotowallPage[] = [];
-
-  slideCountArray: number[] = [];
+  
+  slideShowingTimes: number[] = [];
 
   constructor(
     private pdfService: PdfService,
     private changeDetectionRef: ChangeDetectorRef,
     private timeScheduleService: TimeScheduleService
   ) {
-    this.pdfService.getPhotowallPages().subscribe(pwp => {
-      this.photowallPages = this.preparePdfDocArrays(pwp);
-      setTimeout(() => this.slider.update(), 200);
-      this.slideCountArray = Array(this.photowallPages.length + 2).fill(0).map((x, i) => i)
+    this.slideShowingTimes[0] = 15; // employee hierarchy
+    this.slideShowingTimes[1] = 15; // ZD/FSJ
 
-      this.timeScheduleService.SetPageTimer(10);
+    this.pdfService.getPhotowallPages().subscribe(pwps => {
+      this.photowallPages = pwps; // this.preparePdfDocArrays(pwp);
+      setTimeout(() => this.slider.update(), 200);
+      this.dotSlideIdxArray = Array(this.photowallPages.length + 2).fill(0).map((x, i) => i)
+
+      pwps.forEach((pwp, i) => this.slideShowingTimes[i + 2] = pwp.showingTime); // photowall pages
     });
+
+    this.timeScheduleService.timerExpired$.subscribe(() => this.moveToNextSlide());
   }
 
   ngOnInit(): void {
     
-  }
-
-  private preparePdfDocArrays(photowallPages: PhotowallPage[]): PhotowallPage[] {
-    photowallPages.forEach(pwp => {
-      const pdfsPerPage = 3;
-
-      let tmpPdfCount = 0;
-
-      // init 
-      let newPdfDocArray: PdfDocument[][] = [];
-      for (let i = 0; i < Math.ceil(pwp.pdfDocuments.length / pdfsPerPage); i++) {
-        newPdfDocArray[i] = [];
-      }
-
-      // fill
-      for (let i = 0; i < pwp.pdfDocuments.length; i++) {
-        const pdfDoc = pwp.pdfDocuments[i];
-
-        newPdfDocArray[Math.floor(i / pdfsPerPage)][tmpPdfCount] = pdfDoc;
-        tmpPdfCount = (tmpPdfCount + 1) % pdfsPerPage;
-      }
-      pwp.preparedPdfDocuments = newPdfDocArray;
-    })
-    return photowallPages;
   }
 
   ngAfterViewInit() {
@@ -75,8 +56,10 @@ export class AppComponent {
       slides: {
         origin: "center",
       },
+      created: () => this.timeScheduleService.SetPageTimer(this.slideShowingTimes[this.currentSlideNumber]),
       slideChanged: (s) => {
         this.currentSlideNumber = s.track?.details?.rel;
+        this.timeScheduleService.SetPageTimer(this.slideShowingTimes[this.currentSlideNumber]);
       },
       selector: ".first > .keen-slider__slide"
     });
@@ -92,16 +75,16 @@ export class AppComponent {
       this.moveToPrevSlide();
     } else if(event.key === 'ArrowRight') {
       this.moveToNextSlide();
+    } else {
+      this.timeScheduleService.ResetCurrentTimer();
     }
   }
 
   moveToPrevSlide() {
     this.slider.prev();
-    this.timeScheduleService.SetPageTimer(10);
   }
 
   moveToNextSlide() {
     this.slider.next();
-    this.timeScheduleService.SetPageTimer(10);
   }
 }
