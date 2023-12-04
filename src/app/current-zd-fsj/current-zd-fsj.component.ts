@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ZdFsjService } from '../shared/services/zd-fsj.service';
-import { ZdFsjTurnus } from '../shared/interfaces/zd-fsj-turnus';
 import { TurnusService } from '../shared/services/turnus.service';
 import { Turnus } from '../shared/interfaces/turnus';
 

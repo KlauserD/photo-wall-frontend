@@ -1,8 +1,8 @@
 import { Component, HostListener, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Employee } from '../shared/interfaces/employee';
 import { EmployeesService } from '../shared/services/employees.service';
-import { Role } from '../shared/interfaces/role';
-import { RoleService } from '../shared/services/role.service';
+import { Function } from '../shared/interfaces/function';
+import { FunctionTreeService } from '../shared/services/function-tree.service';
 import { ChildActivationEnd } from '@angular/router';
 import { TimeScheduleService } from '../shared/services/time-schedule.service';
 
@@ -23,9 +23,9 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
   selectorInputResetTimeout: ReturnType<typeof setTimeout> = {} as ReturnType<typeof setTimeout>;
 
   // employees: Employee[] = [];
-  roleTreeRoots: Role[] = [];
+  roleTreeRoots: Function[] = [];
 
-  selectedRolesWithOriginalSiblings: {role: Role, originalSiblings: Role[]}[] = [];
+  selectedRolesWithOriginalSiblings: {role: Function, originalSiblings: Function[]}[] = [];
   // selectNextTimeout: ReturnType<typeof setTimeout> = {} as ReturnType<typeof setTimeout>;
 
   // for selecting parent before selecting a sibling
@@ -33,11 +33,11 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
 
   constructor(
     private timeScheduleService: TimeScheduleService,
-    private roleService: RoleService
+    private roleService: FunctionTreeService
   ) { }
 
   ngOnInit(): void {
-    this.roleService.getRoleTree().subscribe(roles => {
+    this.roleService.getFunctionTree().subscribe(roles => {
       this.roleTreeRoots = roles;
       roles.forEach(role => {
         this.SelectRole(role);
@@ -55,7 +55,7 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
     }
   }
 
-  private AssignSelectorNumbers(roleTree: Role) {
+  private AssignSelectorNumbers(roleTree: Function) {
     const currentNumberWrapper = { currentNumber: 1 };
 
     // assign root
@@ -64,7 +64,7 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
     this.RecAssignSelectorNumbers(roleTree, currentNumberWrapper);
   }
 
-  private RecAssignSelectorNumbers(roleTree: Role, currentNumberWrapper: { currentNumber: number }) {
+  private RecAssignSelectorNumbers(roleTree: Function, currentNumberWrapper: { currentNumber: number }) {
     roleTree.children.forEach(role => {
       if(role.children.length > 0 || (role as any).employee_photo_collection.data) role.selector = currentNumberWrapper.currentNumber++;
     })
@@ -162,11 +162,11 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
   //   return undefined;
   // }
 
-  private FindRoleForSelector(selector: number): Role | null {
+  private FindRoleForSelector(selector: number): Function | null {
     return this.RecFindRoleForSelector(this.roleTreeRoots[0], selector);
   }
 
-  private RecFindRoleForSelector(role: Role, selector: number): Role | null {
+  private RecFindRoleForSelector(role: Function, selector: number): Function | null {
     if(role.selector == selector) return role;
 
     for (let i = 0; i < role.children.length; i++) {
@@ -178,13 +178,13 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
     return null;
   }
 
-  SelectRole(selectedRole: Role) {
+  SelectRole(selectedRole: Function) {
     this.timeScheduleService.ResetCurrentTimer();
     // this.ResetNotTouchedTimeout();
     this.DoSelectRole(selectedRole);
   }
 
-  DoSelectRole(selectedRole: Role) {
+  DoSelectRole(selectedRole: Function) {
     if(selectedRole.children.length == 0) return; // no action when no children to display
 
     let currSelectedRole = this.selectedRolesWithOriginalSiblings[this.selectedRolesWithOriginalSiblings.length - 1]?.role;
@@ -201,7 +201,7 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
 
         while(currSelectedRole && this.IsDescendent(currSelectedRole, selectedRole)) {
 
-          const selectedRoleWithSiblings = (this.selectedRolesWithOriginalSiblings.pop() as {role: Role, originalSiblings: Role[]});
+          const selectedRoleWithSiblings = (this.selectedRolesWithOriginalSiblings.pop() as {role: Function, originalSiblings: Function[]});
           this.GiveBackSiblings(selectedRoleWithSiblings.role, selectedRoleWithSiblings.originalSiblings);
 
           currSelectedRole = this.selectedRolesWithOriginalSiblings[this.selectedRolesWithOriginalSiblings.length - 1]?.role;
@@ -219,8 +219,8 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
     }
   }
 
-  IsDescendent(questionableDescendant: Role, role: Role): boolean {
-    let currentRole: Role;
+  IsDescendent(questionableDescendant: Function, role: Function): boolean {
+    let currentRole: Function;
     currentRole = questionableDescendant.superrole;
 
     while(currentRole) { // not undefined
@@ -232,7 +232,7 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
   }
 
   // returns stolen siblings
-  HideAllSiblings(role: Role): Role[] {
+  HideAllSiblings(role: Function): Function[] {
     if(role.superrole) { // parent exists?
       role.superrole.children.forEach(child => {
         this.HideAllDescendants(child);
@@ -250,7 +250,7 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
     return [];
   }
 
-  GiveBackSiblings(role: Role, siblings: Role[]) {
+  GiveBackSiblings(role: Function, siblings: Function[]) {
     if(siblings.length != 0 &&
         role.superrole
       ) {
@@ -258,7 +258,7 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
       }
   }
 
-  HideAllDescendants(role: Role) {
+  HideAllDescendants(role: Function) {
     if(!role.isPictureCollectionNode) {
       if(role.children.length != 0) {
         role.children.forEach(child => this.HideAllDescendants(child));

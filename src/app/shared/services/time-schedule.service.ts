@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class TimeScheduleService {
-  private INTERVAL_STEP = 50;
+  private INTERVAL_STEP = 200;
 
   public timerExpired$: Observable<void>;
   private timerExpiredSubject$: Subject<void> = new Subject<void>();

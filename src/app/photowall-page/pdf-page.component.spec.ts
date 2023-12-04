@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PhotowallPageComponent } from './photowall-page.component';
+import { PdfPageComponent } from './pdf-page.component';
 
 describe('PhotowallPageComponent', () => {
-  let component: PhotowallPageComponent;
-  let fixture: ComponentFixture<PhotowallPageComponent>;
+  let component: PdfPageComponent;
+  let fixture: ComponentFixture<PdfPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PhotowallPageComponent ]
+      declarations: [ PdfPageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PhotowallPageComponent);
+    fixture = TestBed.createComponent(PdfPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

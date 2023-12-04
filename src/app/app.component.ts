@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import KeenSlider, { KeenSliderInstance } from 'keen-slider';
-import { PhotowallPage } from './shared/interfaces/photowall-page';
-import { PdfService } from './shared/services/pdf.service';
+import { PdfPage } from './shared/interfaces/pdf-page';
+import { PdfPageService } from './shared/services/pdf-page.service';
 import { PdfDocument } from './shared/interfaces/pdf-document';
 import { TimeScheduleService } from './shared/services/time-schedule.service';
 
@@ -22,24 +22,24 @@ export class AppComponent {
   currentSlideNumber: number = 0;
   dotSlideIdxArray: number[] = [];
 
-  photowallPages: PhotowallPage[] = [];
+  pdfPages: PdfPage[] = [];
   
   slideShowingTimes: number[] = [];
 
   constructor(
-    private pdfService: PdfService,
+    private pdfService: PdfPageService,
     private changeDetectionRef: ChangeDetectorRef,
     private timeScheduleService: TimeScheduleService
   ) {
     this.slideShowingTimes[0] = 60; // employee hierarchy
     this.slideShowingTimes[1] = 30; // ZD/FSJ
 
-    this.pdfService.getPhotowallPages().subscribe(pwps => {
-      this.photowallPages = pwps; // this.preparePdfDocArrays(pwp);
+    this.pdfService.getPdfPages().subscribe(pwps => {
+      this.pdfPages = pwps; // this.preparePdfDocArrays(pwp);
       setTimeout(() => this.slider.update(), 200);
-      this.dotSlideIdxArray = Array(this.photowallPages.length + 2).fill(0).map((x, i) => i)
+      this.dotSlideIdxArray = Array(this.pdfPages.length + 2).fill(0).map((x, i) => i)
 
-      pwps.forEach((pwp, i) => this.slideShowingTimes[i + 2] = pwp.showingTime); // photowall pages
+      pwps.forEach((pwp, i) => this.slideShowingTimes[i + 2] = pwp.totalShowingTime); // photowall pages
     });
 
     this.timeScheduleService.timerExpired$.subscribe(() => this.moveToNextSlide());

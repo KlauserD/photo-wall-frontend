@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Role } from '../shared/interfaces/role';
+import { Function } from '../shared/interfaces/function';
 
 @Component({
   selector: 'app-employee-hierarchy-children-container',
@@ -8,7 +8,7 @@ import { Role } from '../shared/interfaces/role';
 })
 export class EmployeeHierarchyChildrenContainerComponent implements OnInit {
 
-  @Input() node: Role | undefined = undefined;
+  @Input() node: Function | undefined = undefined;
 
   constructor() { }
 

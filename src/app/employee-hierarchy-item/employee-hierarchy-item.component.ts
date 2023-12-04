@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Role } from '../shared/interfaces/role';
+import { Function } from '../shared/interfaces/function';
 import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 
 const animation = { duration: 10000, easing: (t: any) => t }
@@ -17,9 +17,9 @@ export class EmployeeHierarchyItemComponent implements OnInit {
 
   empSlider: KeenSliderInstance = {} as KeenSliderInstance;
 
-  @Input() node!: Role;
+  @Input() node!: Function;
   @Input() showPicture: boolean = false;
-  @Output() roleClickedEvent = new EventEmitter<Role>();
+  @Output() roleClickedEvent = new EventEmitter<Function>();
 
   constructor() { }
 
@@ -53,8 +53,8 @@ export class EmployeeHierarchyItemComponent implements OnInit {
     if (this.empSlider?.destroy) this.empSlider.destroy()
   }
 
-  roleClicked(role: Role) {
-    this.roleClickedEvent.emit(role as Role);
+  roleClicked(role: Function) {
+    this.roleClickedEvent.emit(role as Function);
   }
 
 }

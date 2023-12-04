@@ -11,7 +11,7 @@ import { EmployeeHierarchyItemComponent } from './employee-hierarchy-item/employ
 import { CurrentZdFsjComponent } from './current-zd-fsj/current-zd-fsj.component';
 // import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { PhotowallPageComponent } from './photowall-page/photowall-page.component';
+import { PdfPageComponent } from './photowall-page/pdf-page.component';
 import { TimedProgressBarComponent } from './timed-progress-bar/timed-progress-bar.component';
 import { EmployeeHierarchyChildrenContainerComponent } from './employee-hierarchy-children-container/employee-hierarchy-children-container.component';
 
@@ -21,7 +21,7 @@ import { EmployeeHierarchyChildrenContainerComponent } from './employee-hierarch
     EmployeeHierarchyComponent,
     EmployeeHierarchyItemComponent,
     CurrentZdFsjComponent,
-    PhotowallPageComponent,
+    PdfPageComponent,
     TimedProgressBarComponent,
     EmployeeHierarchyChildrenContainerComponent
   ],
