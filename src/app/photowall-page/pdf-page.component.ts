@@ -32,7 +32,9 @@ export class PdfPageComponent implements OnInit, OnChanges {
 
   constructor(
     private timeScheduleService: TimeScheduleService
-  ) { }
+  ) { 
+    timeScheduleService.pdfTurnover$.subscribe(() => this.sliderPdf.next());
+  }
 
   ngOnInit(): void {
   }
@@ -54,11 +56,9 @@ export class PdfPageComponent implements OnInit, OnChanges {
       this.sliderPdf.moveToIdx(0);
 
       const pdfLength = this.pageNumbers[this.pdfPage.id].length + 1;
-      if(pdfLength > 3) {
-        clearTimeout(this.pdfTurnOverTimeout);
 
-        this.pdfTurnOverTimeout = 
-          setTimeout(() => this.turnOverTimeoutExpired(), this.pdfPage.turnOverTime * 1000);
+      if(pdfLength > (this.sliderPdf.options.slides as any).perView) {
+        this.timeScheduleService.SetPdfTurnoverTimer(this.pdfPage.turnOverTime);
       }
     }
   }
@@ -77,12 +77,18 @@ export class PdfPageComponent implements OnInit, OnChanges {
   InitialPagesInitialized(event: any, pdfPage: PdfPage) {
     const pageNumber = event.source.pdfDocument._pdfInfo.numPages;
 
-    if(pageNumber <= 3) {
+    const viewbox: number[] = event.source._pages[0].viewport.viewBox; // [x, y, width, height]
+
+    // landscape or normal format ?
+    const pagesPerView = viewbox[2] > viewbox[3] ? 1 : 3;
+
+    (this.sliderPdf.options.slides as any).perView = pagesPerView;
+
+    if(pageNumber <= pagesPerView) {
       this.sliderPdf.options.loop = false;
     }
 
     this.pageNumbers[pdfPage.id] = Array(pageNumber - 1).fill(0).map((x, i) => i + 2);
-    console.log('page numbers: ', this.pageNumbers);
   }
 
   RestPagesInitialized() {
@@ -90,11 +96,4 @@ export class PdfPageComponent implements OnInit, OnChanges {
     window.dispatchEvent(new Event('resize'))
     this.pdfComponents.forEach(pdfComp => pdfComp.pdfViewer.update());
   }
-
-  private turnOverTimeoutExpired() {
-    this.sliderPdf.next();
-    this.pdfTurnOverTimeout =
-      setTimeout(() => this.turnOverTimeoutExpired(), this.pdfPage.turnOverTime * 1000);
-  }
-
 }

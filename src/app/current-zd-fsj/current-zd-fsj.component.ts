@@ -11,13 +11,26 @@ export class CurrentZdFsjComponent implements OnInit {
 
   turnuses: Turnus[] = [];
 
+  // original
+  // sizesForTurnusCount: { pictureWidth: number, pictureHeight: number, fontSize: number, lineHeight: number}[] = 
+  // [
+  //   { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 }, 
+  //   { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
+  //   { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
+  //   { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
+  //   { pictureWidth: 90, pictureHeight: 65, fontSize: 12, lineHeight: 14 },
+  //   { pictureWidth: 75, pictureHeight: 55, fontSize: 12, lineHeight: 13 },
+  //   { pictureWidth: 55, pictureHeight: 45, fontSize: 10, lineHeight: 11 },
+  // ]
+
+  // after outzoom
   sizesForTurnusCount: { pictureWidth: number, pictureHeight: number, fontSize: number, lineHeight: number}[] = 
   [
     { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 }, 
     { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
     { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
     { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
-    { pictureWidth: 90, pictureHeight: 65, fontSize: 12, lineHeight: 14 },
+    { pictureWidth: 120, pictureHeight: 85, fontSize: 14, lineHeight: 16 }, // currently selected (no variation)
     { pictureWidth: 75, pictureHeight: 55, fontSize: 12, lineHeight: 13 },
     { pictureWidth: 55, pictureHeight: 45, fontSize: 10, lineHeight: 11 },
   ]

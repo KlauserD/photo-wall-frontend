@@ -23,7 +23,7 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
   selectorInputResetTimeout: ReturnType<typeof setTimeout> = {} as ReturnType<typeof setTimeout>;
 
   // employees: Employee[] = [];
-  roleTreeRoots: Function[] = [];
+  functionTreeRoots: Function[] = [];
 
   selectedRolesWithOriginalSiblings: {role: Function, originalSiblings: Function[]}[] = [];
   // selectNextTimeout: ReturnType<typeof setTimeout> = {} as ReturnType<typeof setTimeout>;
@@ -33,25 +33,23 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
 
   constructor(
     private timeScheduleService: TimeScheduleService,
-    private roleService: FunctionTreeService
+    private functionService: FunctionTreeService
   ) { }
 
   ngOnInit(): void {
-    this.roleService.getFunctionTree().subscribe(roles => {
-      this.roleTreeRoots = roles;
-      roles.forEach(role => {
-        this.SelectRole(role);
+    this.functionService.functionTree$.subscribe(treeRoots => {
+      this.functionTreeRoots = treeRoots;
+      treeRoots.forEach(tree => {
+        this.DoSelectRole(tree);
         
-        this.AssignSelectorNumbers(role);
+        this.AssignSelectorNumbers(tree);
       }); // select roots
     });
-    
-    // this.ResetNotTouchedTimeout();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ((changes as any).currentSlideNumber && this.currentSlideNumber == this.slideNumber) {
-      this.roleTreeRoots.forEach(role => this.SelectRole(role)); // select roots
+      this.functionTreeRoots.forEach(role => this.DoSelectRole(role)); // select roots
     }
   }
 
@@ -163,7 +161,7 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
   // }
 
   private FindRoleForSelector(selector: number): Function | null {
-    return this.RecFindRoleForSelector(this.roleTreeRoots[0], selector);
+    return this.RecFindRoleForSelector(this.functionTreeRoots[0], selector);
   }
 
   private RecFindRoleForSelector(role: Function, selector: number): Function | null {
@@ -179,8 +177,7 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
   }
 
   SelectRole(selectedRole: Function) {
-    this.timeScheduleService.ResetCurrentTimer();
-    // this.ResetNotTouchedTimeout();
+    this.timeScheduleService.StopAllTimersForSeconds(10);
     this.DoSelectRole(selectedRole);
   }
 

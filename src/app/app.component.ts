@@ -4,6 +4,8 @@ import { PdfPage } from './shared/interfaces/pdf-page';
 import { PdfPageService } from './shared/services/pdf-page.service';
 import { PdfDocument } from './shared/interfaces/pdf-document';
 import { TimeScheduleService } from './shared/services/time-schedule.service';
+import { SingleTypesService } from './shared/services/single-types.service';
+import { DynamicUpdateService } from './shared/services/dynamic-update.service';
 
 @Component({
   selector: 'app-root',
@@ -24,25 +26,37 @@ export class AppComponent {
 
   pdfPages: PdfPage[] = [];
   
-  slideShowingTimes: number[] = [];
+  slideDetails: {title: string, showingTime: number}[] = [];
+
+  showNavbar: boolean = false;
+  showPauseSymbol: boolean = false;
 
   constructor(
     private pdfService: PdfPageService,
     private changeDetectionRef: ChangeDetectorRef,
-    private timeScheduleService: TimeScheduleService
+    private timeScheduleService: TimeScheduleService,
+    private singleTypesService: SingleTypesService,
+    private dynUpdate: DynamicUpdateService
   ) {
-    this.slideShowingTimes[0] = 60; // employee hierarchy
-    this.slideShowingTimes[1] = 30; // ZD/FSJ
+    // default values
+    this.slideDetails[0] = {title: 'Organigramm', showingTime: 20}; // employee hierarchy
+    this.slideDetails[1] = {title: 'ZD/FSJ-Turnus', showingTime: 20}; // ZD/FSJ
+
+    singleTypesService.getHierarchyShowingTime().subscribe(seconds => { if(seconds != null) this.slideDetails[0].showingTime = seconds; });
+    singleTypesService.getZdFsjShowingTime().subscribe(seconds => { if(seconds != null) this.slideDetails[1].showingTime = seconds; });
 
     this.pdfService.getPdfPages().subscribe(pwps => {
       this.pdfPages = pwps; // this.preparePdfDocArrays(pwp);
       setTimeout(() => this.slider.update(), 200);
       this.dotSlideIdxArray = Array(this.pdfPages.length + 2).fill(0).map((x, i) => i)
 
-      pwps.forEach((pwp, i) => this.slideShowingTimes[i + 2] = pwp.totalShowingTime); // photowall pages
+      pwps.forEach((pwp, i) => this.slideDetails[i + 2] = {title: pwp.title, showingTime: pwp.totalShowingTime}); // photowall pages
     });
 
-    this.timeScheduleService.timerExpired$.subscribe(() => this.moveToNextSlide());
+    this.timeScheduleService.slideTimerExpired$.subscribe(() => this.moveToNextSlide());
+
+    this.timeScheduleService.showNavbar$.subscribe(show => this.showNavbar = show);
+    this.timeScheduleService.animationStopped$.subscribe(stopped => this.showPauseSymbol = stopped);
   }
 
   ngOnInit(): void {
@@ -56,10 +70,10 @@ export class AppComponent {
       slides: {
         origin: "center",
       },
-      created: () => this.timeScheduleService.SetPageTimer(this.slideShowingTimes[this.currentSlideNumber]),
+      created: () => this.timeScheduleService.SetSlideTimer(this.slideDetails[this.currentSlideNumber].showingTime),
       slideChanged: (s) => {
         this.currentSlideNumber = s.track?.details?.rel;
-        this.timeScheduleService.SetPageTimer(this.slideShowingTimes[this.currentSlideNumber]);
+        this.timeScheduleService.SetSlideTimer(this.slideDetails[this.currentSlideNumber].showingTime);
       },
       selector: ".first > .keen-slider__slide"
     });
@@ -72,12 +86,19 @@ export class AppComponent {
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if(event.key === 'ArrowLeft') {
+      this.SlideManuallyChanged();
       this.moveToPrevSlide();
     } else if(event.key === 'ArrowRight') {
+      this.SlideManuallyChanged();
       this.moveToNextSlide();
     } else {
-      this.timeScheduleService.ResetCurrentTimer();
+      this.timeScheduleService.StopAllTimersForSeconds(10);
     }
+  }
+
+  private SlideManuallyChanged() {
+    this.timeScheduleService.ShowNavbarForSeconds(5);
+    this.timeScheduleService.StopAllTimersForSeconds(5);
   }
 
   moveToPrevSlide() {

@@ -13,7 +13,7 @@ export class TimedProgressBarComponent implements OnInit {
   constructor(
     private timeScheduleService: TimeScheduleService
   ) {
-      this.timeScheduleService.timerPercentage$.subscribe(pct => this.progressInPercentage = pct);
+      this.timeScheduleService.slideTimerPercentage$.subscribe(pct => this.progressInPercentage = pct);
    }
 
   ngOnInit(): void {

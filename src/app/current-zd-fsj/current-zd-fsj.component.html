@@ -1,16 +1,16 @@
 
 <div class="p-3">
-    <h2 class="text-center">Aktuelle ZDL-/FSJ-Turnus</h2>
+    <h1 class="text-center">Aktuelle ZDL-/FSJ-Turnus</h1>
 
     <div class="mb-2" *ngFor="let turnus of turnuses">
-        <h4 class="text-center">{{turnus.year}}/{{turnus.month.toLocaleString('de-DE', {
+        <h2 class="text-center">{{turnus.year}}/{{turnus.month.toLocaleString('de-DE', {
       minimumIntegerDigits: 2,
       useGrouping: false
-    })}}</h4>
+    })}}</h2>
 
 
         <div class="d-flex flex-wrap justify-content-center">
-            <div *ngFor="let empPic of turnus.pictures" class="card me-2 mb-2 shadow" style="height: max-content; width: max-content;" >
+            <div *ngFor="let empPic of turnus.pictures" class="card me-3 mb-3 shadow" style="height: max-content; width: max-content;" >
                 <div class="d-flex" style="width: max-content;">
                     <div>
                         <img [src]="empPic.url" 

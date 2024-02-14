@@ -1,55 +1,134 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimeScheduleService {
-  private INTERVAL_STEP = 200;
+  private INTERVAL_STEP = 500;
 
-  public timerExpired$: Observable<void>;
-  private timerExpiredSubject$: Subject<void> = new Subject<void>();
+  public slideTimerExpired$: Observable<void>;
+  private slideTimerExpiredSubject$: Subject<void> = new Subject<void>();
 
-  public timerPercentage$: Observable<number>;
-  private timerPercentageSubject$: Subject<number> = new Subject<number>();
+  public slideTimerPercentage$: Observable<number>;
+  private slideTimerPercentageSubject$: Subject<number> = new Subject<number>();
 
-  private timer: any;
-  private initialTime: number = 0;
-  private elapsedTime: number = 0;
+  public pdfTurnover$: Observable<void>;
+  private pdfTurnoverSubject$: Subject<void> = new Subject<void>();
 
-  constructor() { 
+  public showNavbar$: Observable<boolean>;
+  private showNavbarSubject$: Subject<boolean> = new Subject<boolean>();
+
+  public animationStopped$: Observable<boolean>;
+  private animationStoppedSubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  // slide timer
+  private slideTimer: any;
+  private initialSlideTime: number = 0;
+  private elapsedSlideTime: number = 0;
+
+  // pdf turnover
+  private turnoverTime: number = 5;
+  private pdfTurnoverTimeout: ReturnType<typeof setTimeout> = {} as ReturnType<typeof setTimeout>;;
+
+
+  private stopTimeout: ReturnType<typeof setTimeout> = {} as ReturnType<typeof setTimeout>;
+  private showNavbarTimeout: ReturnType<typeof setTimeout> = {} as ReturnType<typeof setTimeout>;
+
+  constructor() {
     // this.pageTimerReset$ = this.pageTimerResetSubject$.asObservable();
-    this.timerPercentage$ = this.timerPercentageSubject$.asObservable();
-    this.timerExpired$ = this.timerExpiredSubject$.asObservable();
+    this.slideTimerPercentage$ = this.slideTimerPercentageSubject$.asObservable();
+    this.slideTimerExpired$ = this.slideTimerExpiredSubject$.asObservable();
+    this.pdfTurnover$ = this.pdfTurnoverSubject$.asObservable();
+    this.showNavbar$ = this.showNavbarSubject$.asObservable();
+    this.animationStopped$ = this.animationStoppedSubject$.asObservable();
   }
 
-  public SetPageTimer(seconds: number) {
-    this.initialTime = seconds * 1000;
+  /* all timers */
 
-    if(this.timer?.cancel) {
-      this.timer.cancel();
+  public StopAllTimersForSeconds(seconds: number) {
+    clearTimeout(this.stopTimeout);
+
+    this.ResetCurrentSlideTimer();
+    this.StopSlideTimer();
+    this.StopPdfTurnover();
+
+    this.stopTimeout = setTimeout(() => {
+      this.StartSlideTimer();
+      this.SetPdfTurnoverTimer(this.turnoverTime);
+    }, seconds * 1000);
+  }
+
+  /* navbar */
+
+  public ShowNavbarForSeconds(seconds: number) {
+    clearTimeout(this.showNavbarTimeout);
+
+    this.showNavbarSubject$.next(true);
+
+    this.showNavbarTimeout = setTimeout(() => this.showNavbarSubject$.next(false), seconds * 1000);
+  }
+
+  /* pdf turnover */
+
+  public StopPdfTurnover() {
+    clearTimeout(this.pdfTurnoverTimeout);
+  }
+
+  public SetPdfTurnoverTimer(seconds: number) {
+    clearTimeout(this.pdfTurnoverTimeout);
+    this.pdfTurnoverTimeout = setTimeout(() => this.pdfTurnoverCallback(seconds), seconds * 1000);
+  }
+
+  private pdfTurnoverCallback(seconds: number) {
+    this.pdfTurnoverSubject$.next();
+    this.pdfTurnoverTimeout = setTimeout(() => this.pdfTurnoverCallback(seconds), seconds * 1000);
+  }
+
+  /* slide timer */
+
+  public SetSlideTimer(seconds: number) {
+    this.initialSlideTime = seconds * 1000;
+
+    if(this.slideTimer?.cancel) {
+      this.slideTimer.cancel();
     }
 
-    this.timerPercentageSubject$.next(100);
-    this.elapsedTime = 0;
+    this.slideTimerPercentageSubject$.next(100);
+    this.elapsedSlideTime = 0;
 
-    this.timer = this.accurateTimer(() => this.intervalCallback(), this.INTERVAL_STEP);
+    if(!this.animationStoppedSubject$.getValue()) {
+      this.StartSlideTimer();
+    }
   }
 
-  public ResetCurrentTimer() {
-    this.SetPageTimer(this.initialTime / 1000);
+  public ResetCurrentSlideTimer() {
+    this.SetSlideTimer(this.initialSlideTime / 1000);
   }
 
-  private intervalCallback() {
-    this.elapsedTime += this.INTERVAL_STEP;
-
-    if(this.elapsedTime > this.initialTime) {
-      this.elapsedTime = this.initialTime;
-      clearInterval(this.timer);
-      this.timerExpiredSubject$.next();
+  private StopSlideTimer() {
+    if(this.slideTimer?.cancel) {
+      this.slideTimer.cancel();
     }
 
-    this.timerPercentageSubject$.next(100 - (this.elapsedTime / this.initialTime) * 100);
+    this.animationStoppedSubject$.next(true);
+  }
+
+  private StartSlideTimer() {
+    this.animationStoppedSubject$.next(false);
+    this.slideTimer = this.accurateTimer(() => this.slideTimerIntervalCallback(), this.INTERVAL_STEP);
+  }
+
+  private slideTimerIntervalCallback() {
+    this.elapsedSlideTime += this.INTERVAL_STEP;
+
+    if(this.elapsedSlideTime > this.initialSlideTime) {
+      this.elapsedSlideTime = this.initialSlideTime;
+      clearInterval(this.slideTimer);
+      this.slideTimerExpiredSubject$.next();
+    }
+
+    this.slideTimerPercentageSubject$.next(100 - (this.elapsedSlideTime / this.initialSlideTime) * 100);
   }
 
   private accurateTimer = (fn: () => void, time: number) => {

@@ -1,37 +1,54 @@
-<div style="background-image: url(assets/images/hintergrund-grundsatze.jpg); 
-            background-size: contain;
-            background-color: rgba(255,255,255,0.3);
-            background-blend-mode: lighten;">
-    <div class="keen-slider first" #sliderRef>
-        <div class="keen-slider__slide slide-height">
-            <app-employee-hierarchy 
-                [slideNumber]="0" 
-                [currentSlideNumber]="currentSlideNumber"
-            ></app-employee-hierarchy>
-        </div>
-        <div class="keen-slider__slide slide-height">
-            <app-current-zd-fsj></app-current-zd-fsj> 
-        </div>
-    
-        <div *ngFor="let pwp of pdfPages; let idx = index" class="keen-slider__slide slide-height">
-            <app-pdf-page 
-                [pdfPage]="pwp"
-                [slideNumber]="2 + idx"
-                [currentSlideNumber]="currentSlideNumber"
-            ></app-pdf-page>
-        </div>
-    
+<div class="position-relative">
+    <div *ngIf="showNavbar" class="position-absolute top-0 start-0 h-100" style="z-index: 1;">
+        <div class="d-flex flex-column p-3 bg-light h-100">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+              <img class="me-3" width="80" height="80" src="assets/images/OERK_Sonderlogo_cmyk.svg"/>
+              <span class="fs-2 fw-bold">RK Melk</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+              <li *ngFor="let detail of slideDetails; index as i" class="nav-item">
+                <a href="#" [class]="'fs-4 nav-link ' + (currentSlideNumber === i ? 'active' : 'link-dark')">
+                    {{detail.title}}
+                </a>
+              </li>
+            </ul>
+          </div>
     </div>
-    
-    <app-timed-progress-bar (timerExpired)="moveToNextSlide()"></app-timed-progress-bar>
-    
-    <div class="dots">
-      <button
-        *ngFor="let slideIdx of dotSlideIdxArray"
-        (click)="slider.moveToIdx(slideIdx)"
-        [class]="'dot ' + (slideIdx === currentSlideNumber ? 'active' : '')"
-      ></button>
+
+    <div *ngIf="showPauseSymbol" class="position-absolute top-0 end-0">
+      <i class="bi bi-pause-fill blink m-5" style="font-size: 4rem; color: red;"></i>
     </div>
+
+
+        <div class="keen-slider first" #sliderRef>
+            <div class="keen-slider__slide slide-height">
+                <app-employee-hierarchy 
+                    [slideNumber]="0" 
+                    [currentSlideNumber]="currentSlideNumber"
+                ></app-employee-hierarchy>
+            </div>
+            <div class="keen-slider__slide slide-height">
+                <app-current-zd-fsj></app-current-zd-fsj> 
+            </div>
+        
+            <div *ngFor="let pwp of pdfPages; let idx = index" class="keen-slider__slide slide-height">
+                <app-pdf-page 
+                    [pdfPage]="pwp"
+                    [slideNumber]="2 + idx"
+                    [currentSlideNumber]="currentSlideNumber"
+                ></app-pdf-page>
+            </div>
+        </div>
+
+        <app-timed-progress-bar (timerExpired)="moveToNextSlide()"></app-timed-progress-bar>
+        <div class="dots">
+          <button
+            *ngFor="let slideIdx of dotSlideIdxArray"
+            (click)="slider.moveToIdx(slideIdx)"
+            [class]="'dot ' + (slideIdx === currentSlideNumber ? 'active' : '')"
+          ></button>
+        </div>
 </div>
 
 

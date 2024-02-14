@@ -1,8 +1,9 @@
 <div class="p-3 h-100">
-    <!-- <h2 class="text-center">Organigramm</h2> -->
+    <h1 class="text-center mb-4">Organigramm</h1>
+
 
     <div class="row justify-content-center">
-        <angular-org-chart *ngFor="let roleRoot of roleTreeRoots" [nodeTemplate]="nodeTemplate" [data]="roleRoot" #exampleChart="orgChart">
+        <angular-org-chart *ngFor="let roleRoot of functionTreeRoots" [nodeTemplate]="nodeTemplate" [data]="roleRoot" #exampleChart="orgChart">
     
         </angular-org-chart>
         

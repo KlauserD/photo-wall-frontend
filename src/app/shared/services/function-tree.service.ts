@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, Subject, catchError, map, of } from 'rxjs';
 import { Function } from '../interfaces/function';
 import { environment } from 'src/environments/environment';
 import { EmployeesService } from './employees.service';
@@ -12,11 +12,16 @@ import { Employee } from '../interfaces/employee';
 })
 export class FunctionTreeService {
 
+  private functionTreeSubject$: Subject<Function[]> = new Subject<Function[]>();
+  public functionTree$: Observable<Function[]>;
+
   constructor(
     private http: HttpClient,
     private employeesService: EmployeesService,
     private empPhotoCollectionService: EmpPhotoCollectionService
-  ) { }
+  ) { 
+    this.functionTree$ = this.functionTreeSubject$.asObservable();
+  }
 
   private errorHandler(error: Error | any): Observable<any> {
     console.log(error);
@@ -52,7 +57,6 @@ export class FunctionTreeService {
                 selector: 0
               } as Function);
             }
-            console.log('role: ', role);
           });
     }
 
@@ -99,12 +103,25 @@ export class FunctionTreeService {
     return functionTree;
   }
 
-  getFunctionTree(): Observable<Array<Function>> {
-    return this.http.get<any>(
+  updateFunctionTree() {
+    this.http.get<any>(
       `${environment.server}/functions`, {params: { populate: '*' }})
       .pipe(
         map(res => this.createFunctionTree(res)), 
         catchError(this.errorHandler)
-      );
+      ).subscribe(tree => {
+        if(tree != null) {
+          this.functionTreeSubject$.next(tree);
+        }
+      });
   }
+
+  // getFunctionTree(): Observable<Array<Function>> {
+  //   return this.http.get<any>(
+  //     `${environment.server}/functions`, {params: { populate: '*' }})
+  //     .pipe(
+  //       map(res => this.createFunctionTree(res)), 
+  //       catchError(this.errorHandler)
+  //     );
+  // }
 }

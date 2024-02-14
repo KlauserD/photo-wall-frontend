@@ -21,24 +21,25 @@
 <div *ngIf="!node.isPictureCollectionNode" class="card" 
      (click)="roleClicked(node)" [style]="node?.isSelected ? 'background-color: rgba(217, 87, 89, 0.153);' : ''"
 >
-    <div class="row g-0">
+    <div class="d-flex g-0">
         <div *ngIf="showPicture && 
-                node?.employee?.pictureUrl &&
-                (node.superrole == undefined ||
-                node?.superrole?.children?.length && node.superrole.children.length <= 6)" class="col">
-            <div style="height: 100px">
-                <img [src]="node?.employee?.pictureUrl" style="height: 100px" class="img-fluid rounded-start" alt="...">
+                node?.employee?.pictureUrl" class="flex-shrink-0">
+            <div style="height: 105px">
+                <img [src]="node?.employee?.pictureUrl" style="height: 105px" class="img-fluid rounded-start" alt="...">
             </div>
         </div>
         
-        <div class="col d-flex flex-column justify-content-between">
-            <div class="card-body p-2 pb-1">
-                <b class="card-title mb-1" style="font-size: 13px; line-height: 15px; display: block;">{{node?.name}}</b>
-                <div class="text" style="font-size: 12px;">{{node?.employee?.name}}</div>
+        <div class="flex-shrink-1 d-flex flex-column justify-content-between">
+            <div class="card-body p-2 pb-1" style="width: min-content; min-width: 80px; max-width: 140px;">
+                <b class="card-title mb-1" style="width: fit-content; font-size: 13px; line-height: 15px; display: block;">{{node?.name}}</b>
+                <div style="width: fit-content; font-size: 12px; line-height: 15px;">{{node?.employee?.name}}</div>
+                <!-- <div class="text" style="font-size: 12px;">{{node?.employee?.name}}</div> -->
             </div>
             <div *ngIf="node.selector" class="d-flex justify-content-end px-1">
                 <b style="color: red; font-size: 18px">{{ node.selector?.toString()?.padStart(2, '0') }}</b>
             </div>
+
+
             <!-- <div *ngIf="node?.children?.length != 0 && node?.hideChildren" class="d-flex justify-content-center">
                 <i class="bi bi-diagram-3 text-success"></i>
                 
