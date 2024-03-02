@@ -6,6 +6,7 @@ import { PdfDocument } from './shared/interfaces/pdf-document';
 import { TimeScheduleService } from './shared/services/time-schedule.service';
 import { SingleTypesService } from './shared/services/single-types.service';
 import { DynamicUpdateService } from './shared/services/dynamic-update.service';
+import { RefreshTimeService } from './shared/services/refresh-time.service';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +37,7 @@ export class AppComponent {
     private changeDetectionRef: ChangeDetectorRef,
     private timeScheduleService: TimeScheduleService,
     private singleTypesService: SingleTypesService,
+    private refreshTimeService: RefreshTimeService,
     private dynUpdate: DynamicUpdateService
   ) {
     // default values
@@ -57,7 +59,30 @@ export class AppComponent {
 
     this.timeScheduleService.showNavbar$.subscribe(show => this.showNavbar = show);
     this.timeScheduleService.animationStopped$.subscribe(stopped => this.showPauseSymbol = stopped);
+  
+    this.refreshTimeService.getRefreshTimes().subscribe(times => times.forEach(time => this.refreshAt(time)));
   }
+
+  private refreshAt(refreshTime: Date) {
+    const hours = refreshTime.getHours();
+    const minutes = refreshTime.getMinutes();
+    const seconds = refreshTime.getSeconds();
+
+    var now = new Date();
+    var then = new Date();
+
+    if(now.getHours() > hours ||
+       (now.getHours() == hours && now.getMinutes() > minutes) ||
+        now.getHours() == hours && now.getMinutes() == minutes && now.getSeconds() >= seconds) {
+        then.setDate(now.getDate() + 1);
+    }
+    then.setHours(hours);
+    then.setMinutes(minutes);
+    then.setSeconds(seconds);
+
+    var timeout = (then.getTime() - now.getTime());
+    setTimeout(() => window.location.reload(), timeout);
+}
 
   ngOnInit(): void {
     
