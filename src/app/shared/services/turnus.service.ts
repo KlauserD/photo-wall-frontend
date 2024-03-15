@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, filter, map, of } from 'rxjs';
+import { Observable, catchError, map, of} from 'rxjs';
 import { Turnus } from '../interfaces/turnus';
 import { environment } from 'src/environments/environment';
 
@@ -58,8 +58,7 @@ export class TurnusService {
           'sort[1]': 'month:desc',
         }
       }).pipe(
-        map(res => res['data'].map((zdObj: any) => this.mapToTurnus(zdObj))),
-        filter(turnus => turnus.active !== false),
+        map(res => res['data'].map((zdObj: any) => this.mapToTurnus(zdObj)).filter((turnus: Turnus) => turnus.active !== false)),
         catchError(this.errorHandler)
       );
   }
