@@ -30,7 +30,7 @@ export class TurnusService {
       if(filenameWithoutPrefix.startsWith("FSJ-")) role = "FSJ";
 
       return {
-        name: (photoObj.attributes.name as string).replace(photoObj.attributes.ext, "").replace('ZD-', "").replace('FSJ-', ''),
+        name: filenameWithoutPrefix.replace(photoObj.attributes.ext, "").replace('ZD-', "").replace('FSJ-', ''),
         url: environment.uploadUrl.concat(photoObj.attributes.url),
         role: role
       } as {name: string, url: string, role: string};
