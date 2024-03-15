@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, filter, map, of } from 'rxjs';
 import { Turnus } from '../interfaces/turnus';
 import { environment } from 'src/environments/environment';
 
@@ -20,6 +20,10 @@ export class TurnusService {
 
   private getPictures(picturesData: any): {name: string, url: string, role: string}[] {
     return (picturesData as any[]).map(photoObj => {
+
+      if((photoObj.attributes.name as string).startsWith('api_')) {
+        photoObj.attributes.name = photoObj.attributes.name.split('api_')[1];
+      }
 
       let role = "";
       if((photoObj.attributes.name as string).startsWith("ZD-")) role = "Zivildienst";
@@ -45,18 +49,17 @@ export class TurnusService {
     return turnus;
   }
 
-  getLastTurnuses(numberOfTurnuses: number): Observable<Array<Turnus>> {
+  getLastTurnuses(): Observable<Array<Turnus>> {
     return this.http.get<any>(
       `${environment.server}/turnuses`, {
         params: { 
           populate: '*', 
           'sort[0]': 'year:desc', 
           'sort[1]': 'month:desc',
-          'pagination[start]': 0,
-          'pagination[limit]': numberOfTurnuses
         }
       }).pipe(
-        map(res => res['data'].map((zdObj: any) => this.mapToTurnus(zdObj))), 
+        map(res => res['data'].map((zdObj: any) => this.mapToTurnus(zdObj))),
+        filter(turnus => turnus.active !== false),
         catchError(this.errorHandler)
       );
   }

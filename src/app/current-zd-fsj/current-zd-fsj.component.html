@@ -14,20 +14,20 @@
                 <div class="d-flex" style="width: max-content;">
                     <div>
                         <img [src]="empPic.url" 
-                            [style]="'max-width: ' + sizesForTurnusCount[turnuses.length].pictureWidth + 
-                                    'px; max-height: ' + sizesForTurnusCount[turnuses.length].pictureHeight + 'px;'" 
+                            [style]="'max-width: ' + sizes.pictureWidth + 
+                                    'px; max-height: ' + sizes.pictureHeight + 'px;'" 
                             class="img-fluid rounded-start" alt="...">
                     </div>
                     <div class="card-body py-1 px-2 d-flex flex-column justify-content-between">
                         <b class="text-wrap" 
-                            [style]="'max-width: ' + sizesForTurnusCount[turnuses.length].pictureWidth + 
-                                    'px; font-size: ' + sizesForTurnusCount[turnuses.length].fontSize + 
-                                    'px; line-height: ' + sizesForTurnusCount[turnuses.length].lineHeight + 
+                            [style]="'max-width: ' + sizes.pictureWidth + 
+                                    'px; font-size: ' + sizes.fontSize + 
+                                    'px; line-height: ' + sizes.lineHeight + 
                                     'px; display: block; width: min-content;'">{{empPic.name}}</b>
                         <span class="card-title text-muted mb-0" 
-                                [style]="'max-width: ' + sizesForTurnusCount[turnuses.length].pictureWidth + 
-                                        'px; font-size: ' + sizesForTurnusCount[turnuses.length].fontSize + 
-                                        'px; line-height: ' + sizesForTurnusCount[turnuses.length].lineHeight + 
+                                [style]="'max-width: ' + sizes.pictureWidth + 
+                                        'px; font-size: ' + sizes.fontSize + 
+                                        'px; line-height: ' + sizes.lineHeight + 
                                         'px; display: block; width: min-content;'">{{empPic.role}}</span>
                     </div>
                 </div>

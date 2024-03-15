@@ -24,16 +24,18 @@ export class CurrentZdFsjComponent implements OnInit {
   // ]
 
   // after outzoom
-  sizesForTurnusCount: { pictureWidth: number, pictureHeight: number, fontSize: number, lineHeight: number}[] = 
-  [
-    { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 }, 
-    { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
-    { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
-    { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
-    { pictureWidth: 120, pictureHeight: 85, fontSize: 14, lineHeight: 16 }, // currently selected (no variation)
-    { pictureWidth: 75, pictureHeight: 55, fontSize: 12, lineHeight: 13 },
-    { pictureWidth: 55, pictureHeight: 45, fontSize: 10, lineHeight: 11 },
-  ]
+  // sizesForTurnusCount: { pictureWidth: number, pictureHeight: number, fontSize: number, lineHeight: number}[] = 
+  // [
+  //   { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 }, 
+  //   { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
+  //   { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
+  //   { pictureWidth: 110, pictureHeight: 80, fontSize: 13, lineHeight: 15 },
+  //   { pictureWidth: 120, pictureHeight: 85, fontSize: 14, lineHeight: 16 }, // currently selected (no variation)
+  //   { pictureWidth: 75, pictureHeight: 55, fontSize: 12, lineHeight: 13 },
+  //   { pictureWidth: 55, pictureHeight: 45, fontSize: 10, lineHeight: 11 },
+  // ]
+
+  sizes = { pictureWidth: 120, pictureHeight: 85, fontSize: 14, lineHeight: 16 };
 
   // rotations: ZdFsjTurnus[] = [];
 
@@ -43,7 +45,7 @@ export class CurrentZdFsjComponent implements OnInit {
 
   ngOnInit(): void {
     // this._zdFsjService.getLastRotationsWithZdFsj(3).subscribe(rotations => this.rotations = rotations);
-    this._turnusService.getLastTurnuses(4).subscribe(turnuses => this.turnuses = turnuses);
+    this._turnusService.getLastTurnuses().subscribe(turnuses => this.turnuses = turnuses);
     
   }
 }
