@@ -20,14 +20,14 @@ export class TurnusService {
 
   private getPictures(picturesData: any): {name: string, url: string, role: string}[] {
     return (picturesData as any[]).map(photoObj => {
-
-      if((photoObj.attributes.name as string).startsWith('api_')) {
-        photoObj.attributes.name = photoObj.attributes.name.split('api_')[1];
+      let filenameWithoutPrefix = (photoObj.attributes.name as string)
+      if(filenameWithoutPrefix.startsWith('api_')) {
+        filenameWithoutPrefix = filenameWithoutPrefix.split('api_')[1];
       }
 
       let role = "";
-      if((photoObj.attributes.name as string).startsWith("ZD-")) role = "Zivildienst";
-      if((photoObj.attributes.name as string).startsWith("FSJ-")) role = "FSJ";
+      if(filenameWithoutPrefix.startsWith("ZD-")) role = "Zivildienst";
+      if(filenameWithoutPrefix.startsWith("FSJ-")) role = "FSJ";
 
       return {
         name: (photoObj.attributes.name as string).replace(photoObj.attributes.ext, "").replace('ZD-', "").replace('FSJ-', ''),
