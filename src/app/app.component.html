@@ -20,35 +20,50 @@
       <i class="bi bi-pause-fill blink m-5" style="font-size: 4rem; color: red;"></i>
     </div>
 
-
-        <div class="keen-slider first" #sliderRef>
-            <div class="keen-slider__slide slide-height">
-                <app-employee-hierarchy 
-                    [slideNumber]="0" 
-                    [currentSlideNumber]="currentSlideNumber"
-                ></app-employee-hierarchy>
-            </div>
-            <div class="keen-slider__slide slide-height">
-                <app-current-zd-fsj></app-current-zd-fsj> 
-            </div>
-        
-            <div *ngFor="let pwp of pdfPages; let idx = index" class="keen-slider__slide slide-height">
-                <app-pdf-page 
-                    [pdfPage]="pwp"
-                    [slideNumber]="2 + idx"
-                    [currentSlideNumber]="currentSlideNumber"
-                ></app-pdf-page>
-            </div>
+    <div class="keen-slider first" #sliderRef>
+        <div class="keen-slider__slide slide-height">
+            <app-employee-hierarchy 
+                [slideNumber]="0" 
+                [currentSlideNumber]="currentSlideNumber"
+            ></app-employee-hierarchy>
         </div>
 
-        <app-timed-progress-bar (timerExpired)="moveToNextSlide()"></app-timed-progress-bar>
-        <div class="dots">
-          <button
-            *ngFor="let slideIdx of dotSlideIdxArray"
-            (click)="slider.moveToIdx(slideIdx)"
-            [class]="'dot ' + (slideIdx === currentSlideNumber ? 'active' : '')"
-          ></button>
+        <div class="keen-slider__slide slide-height">
+          <app-current-zd-fsj></app-current-zd-fsj> 
         </div>
+
+        <!-- style="clip-path: xywh(269px 102px 447px 442px)" -->
+        <div class="keen-slider__slide slide-height p-3 d-flex flex-column">
+          <h1 class="text-center">PV Anlage</h1>
+
+          <div class="d-flex justify-content-center align-items-center w-100 flex-grow-1">
+            <div class="aspect-ratio">
+
+              <iframe scrolling="no"
+                width="550" height="275" frameborder="0"
+                src="https://www.solarweb.com/PublicDisplay?token=f77f5237-30a8-47a5-9a02-8742db6e179e">
+              </iframe>
+            </div>
+          </div>
+        </div>
+    
+        <div *ngFor="let pwp of pdfPages; let idx = index" class="keen-slider__slide slide-height">
+            <app-pdf-page 
+                [pdfPage]="pwp"
+                [slideNumber]="FIXED_SLIDES_COUNT + idx"
+                [currentSlideNumber]="currentSlideNumber"
+            ></app-pdf-page>
+        </div>
+    </div>
+
+    <app-timed-progress-bar (timerExpired)="moveToNextSlide()"></app-timed-progress-bar>
+    <div class="dots">
+      <button
+        *ngFor="let slideIdx of dotSlideIdxArray"
+        (click)="slider.moveToIdx(slideIdx)"
+        [class]="'dot ' + (slideIdx === currentSlideNumber ? 'active' : '')"
+      ></button>
+    </div>
 </div>
 
 

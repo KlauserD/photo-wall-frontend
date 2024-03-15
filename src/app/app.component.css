@@ -80,3 +80,18 @@
     visibility: hidden;
   }
 }
+
+.aspect-ratio {
+  position: relative;
+  width: calc((100vh - 140px) * 16 / 9);
+  height: calc(100vh - 140px);
+}
+
+/* Adjust the iframe so it's rendered in the outer-width and outer-height of it's parent */
+.aspect-ratio iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
