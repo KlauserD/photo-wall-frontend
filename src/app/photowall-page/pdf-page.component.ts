@@ -65,8 +65,12 @@ export class PdfPageComponent implements OnInit, OnChanges {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if(this.slideNumber === this.currentSlideNumber && event.key === 'ArrowDown') {
-      this.sliderPdf.next();
+    if(this.slideNumber === this.currentSlideNumber) {
+      if(event.code === 'NumpadDivide') {
+        this.sliderPdf.prev();
+      } else if(event.code === 'NumpadMultiply') {
+        this.sliderPdf.next();
+      }
     }
   }
 

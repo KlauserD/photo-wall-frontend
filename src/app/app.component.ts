@@ -113,10 +113,10 @@ export class AppComponent {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if(event.key === 'ArrowLeft') {
+    if(event.code === 'ArrowLeft' || event.code === 'NumLock') {
       this.SlideManuallyChanged();
       this.moveToPrevSlide();
-    } else if(event.key === 'ArrowRight') {
+    } else if(event.code === 'ArrowRight' || event.code === 'NumpadSubtract') {
       this.SlideManuallyChanged();
       this.moveToNextSlide();
     } else {

@@ -73,7 +73,9 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if(this.currentSlideNumber == this.slideNumber) {
-      if(event.key >= '0' && event.key <= '9') {
+      if((event.key >= '0' && event.key <= '9') || 
+         (event.code >= 'Numpad0' && event.code <= 'Numpad9')) {
+        
         clearTimeout(this.selectorInputResetTimeout);
         this.selectorInputResetTimeout = setTimeout(() => this.selectorInput = "", 5000);
 
@@ -81,7 +83,11 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
           this.selectorInput = "";
         }
 
-        this.selectorInput += event.key;
+        if(event.code >= 'Numpad0' && event.code <= 'Numpad9') {
+          this.selectorInput += event.code.split('Numpad')[1];
+        } else {
+          this.selectorInput += event.key;
+        }
 
         if(this.selectorInput.length == 2) {
           const selectedRole = this.FindRoleForSelector(+this.selectorInput);
