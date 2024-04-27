@@ -44,6 +44,7 @@ export class PdfPageComponent implements OnInit, OnChanges {
       loop: true,
       slides: {
         perView: 3,
+        origin: 'center'
       }
     });
 
