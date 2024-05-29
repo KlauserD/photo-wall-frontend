@@ -44,12 +44,9 @@ export class PdfPageComponent implements OnInit, OnChanges {
       loop: true,
       slides: {
         perView: 3,
-        origin: 'center'
+        origin: 'auto'
       }
     });
-
-    // setTimeout(() => console.log(this.pdfComponents), 6000);
-    // this.pdfComponent.pdfViewer.currentScaleValue = 'page-fit';
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -80,20 +77,24 @@ export class PdfPageComponent implements OnInit, OnChanges {
   }
 
   InitialPagesInitialized(event: any, pdfPage: PdfPage) {
-    const pageNumber = event.source.pdfDocument._pdfInfo.numPages;
+    const pagesCount = event.source.pdfDocument._pdfInfo.numPages;
 
     const viewbox: number[] = event.source._pages[0].viewport.viewBox; // [x, y, width, height]
 
+    let pagesPerView = pagesCount >= 3 ? 3 : pagesCount;
+
     // landscape or normal format ?
-    const pagesPerView = viewbox[2] > viewbox[3] ? 1 : 3;
+    if(viewbox[2] > viewbox[3]) {
+      pagesPerView = 1;
+    }
 
     (this.sliderPdf.options.slides as any).perView = pagesPerView;
 
-    if(pageNumber <= pagesPerView) {
+    if(pagesCount <= pagesPerView) {
       this.sliderPdf.options.loop = false;
     }
 
-    this.pageNumbers[pdfPage.id] = Array(pageNumber - 1).fill(0).map((x, i) => i + 2);
+    this.pageNumbers[pdfPage.id] = Array(pagesCount - 1).fill(0).map((x, i) => i + 2);
   }
 
   RestPagesInitialized() {
