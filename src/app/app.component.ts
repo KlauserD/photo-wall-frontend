@@ -19,7 +19,7 @@ import { RefreshTimeService } from './shared/services/refresh-time.service';
 export class AppComponent {
   title = 'photo-wall-frontend';
 
-  readonly FIXED_SLIDES_COUNT = 3;
+  readonly FIXED_SLIDES_COUNT = 4;
 
   @ViewChild("sliderRef") sliderRef: ElementRef<HTMLElement> = {} as ElementRef<HTMLElement>;
 
@@ -45,7 +45,8 @@ export class AppComponent {
     // default values
     this.slideDetails[0] = {title: 'Organigramm', showingTime: 20}; // employee hierarchy
     this.slideDetails[1] = {title: 'ZD/FSJ-Turnus', showingTime: 20}; // ZD/FSJ
-    this.slideDetails[2] = {title: 'PV Anlage', showingTime: 15}; // Fronius
+    this.slideDetails[2] = {title: 'Ehrenamtliche Mitarbeiter', showingTime: 20}; // volunteers
+    this.slideDetails[3] = {title: 'PV Anlage', showingTime: 15}; // Fronius
 
     singleTypesService.getHierarchyShowingTime().subscribe(seconds => { if(seconds != null) this.slideDetails[0].showingTime = seconds; });
     singleTypesService.getZdFsjShowingTime().subscribe(seconds => { if(seconds != null) this.slideDetails[1].showingTime = seconds; });

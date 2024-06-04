@@ -1,0 +1,13 @@
+<div class="d-flex flex-column h-100 p-3">
+    <h1 class="text-center mb-3">Ehrenamtliche Mitarbeiter</h1>
+    <div class="flex-grow-1">
+        <div class="keen-slider h-100" #sliderVolunteersRef>
+            <div *ngFor="let volunteersPage of volunteerPages" class="keen-slider__slide h-100">
+                <app-volunteers-page 
+                    [title]="volunteersPage.name" 
+                    [volunteers]="volunteersPage.volunteersArray">
+                </app-volunteers-page>
+            </div>
+        </div>
+    </div>
+</div>

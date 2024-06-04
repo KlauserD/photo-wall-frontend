@@ -20,7 +20,7 @@ export class PdfPageComponent implements OnInit, OnChanges {
   @Input() slideNumber: number = -1;
   @Input() currentSlideNumber: number = -2;
 
-  @ViewChild("sliderPdfRef") sliderPdfRef: ElementRef<HTMLElement> = {} as ElementRef<HTMLElement>;
+  @ViewChild('sliderPdfRef') sliderPdfRef: ElementRef<HTMLElement> = {} as ElementRef<HTMLElement>;
   sliderPdf: KeenSliderInstance = {} as KeenSliderInstance;
 
   @ViewChildren(PdfViewerComponent)
@@ -41,7 +41,7 @@ export class PdfPageComponent implements OnInit, OnChanges {
 
   ngAfterViewInit() {
     this.sliderPdf = new KeenSlider(this.sliderPdfRef.nativeElement, {
-      loop: true,
+      loop: false,
       slides: {
         perView: 3,
         origin: 'auto'
@@ -90,8 +90,8 @@ export class PdfPageComponent implements OnInit, OnChanges {
 
     (this.sliderPdf.options.slides as any).perView = pagesPerView;
 
-    if(pagesCount <= pagesPerView) {
-      this.sliderPdf.options.loop = false;
+    if(pagesCount > pagesPerView) {
+      this.sliderPdf.options.loop = true;
     }
 
     this.pageNumbers[pdfPage.id] = Array(pagesCount - 1).fill(0).map((x, i) => i + 2);

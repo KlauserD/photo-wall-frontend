@@ -1,0 +1,25 @@
+<h3 class="text-center">{{title}}</h3>
+<div class="d-flex flex-wrap justify-content-center">
+    <div *ngFor="let volunteer of volunteers" class="card me-3 mb-3 shadow" style="height: max-content; width: max-content;" >
+        <div class="d-flex" style="width: max-content;">
+            <div>
+                <img [src]="volunteer.pictureUrl" 
+                    [style]="'max-width: ' + sizes.pictureWidth + 
+                            'px; max-height: ' + sizes.pictureHeight + 'px;'" 
+                    class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="card-body py-1 px-2 d-flex flex-column justify-content-between">
+                <b class="text-wrap" 
+                    [style]="'max-width: ' + sizes.pictureWidth + 
+                            'px; font-size: ' + sizes.fontSize + 
+                            'px; line-height: ' + sizes.lineHeight + 
+                            'px; display: block; width: min-content;'">{{volunteer.name}}</b>
+                <span class="card-title text-muted mb-0" 
+                        [style]="'max-width: ' + sizes.pictureWidth + 
+                                'px; font-size: ' + sizes.fontSize + 
+                                'px; line-height: ' + sizes.lineHeight + 
+                                'px; display: block; width: min-content;'">{{volunteer.qualification}}</span>
+            </div>
+        </div>
+    </div>
+</div>

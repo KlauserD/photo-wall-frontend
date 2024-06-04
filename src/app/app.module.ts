@@ -14,6 +14,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { PdfPageComponent } from './photowall-page/pdf-page.component';
 import { TimedProgressBarComponent } from './timed-progress-bar/timed-progress-bar.component';
 import { EmployeeHierarchyChildrenContainerComponent } from './employee-hierarchy-children-container/employee-hierarchy-children-container.component';
+import { VolunteersComponent } from './volunteers/volunteers.component';
+import { VolunteersPageComponent } from './volunteers-page/volunteers-page.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { EmployeeHierarchyChildrenContainerComponent } from './employee-hierarch
     CurrentZdFsjComponent,
     PdfPageComponent,
     TimedProgressBarComponent,
-    EmployeeHierarchyChildrenContainerComponent
+    EmployeeHierarchyChildrenContainerComponent,
+    VolunteersComponent,
+    VolunteersPageComponent
   ],
   imports: [
     BrowserModule,
