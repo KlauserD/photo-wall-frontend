@@ -26,17 +26,6 @@ export class VolunteersComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
-  }
-
-  ngAfterViewInit() {
-    this.sliderVolunteers = new KeenSlider(this.sliderVolunteersRef.nativeElement, {
-      loop: true,
-      slides: {
-        origin: 'center'
-      }
-    });
-
     this.volunteerService.getVolunteerRealms().subscribe(vRealms => {
       for (let i = 0; i < vRealms.length; i++) {
         const realm = vRealms[i];
@@ -53,6 +42,16 @@ export class VolunteersComponent implements OnInit {
       }
 
       this.volunteerPages = vRealms;
+      setTimeout(() => this.sliderVolunteers.update(), 200);
+    });
+  }
+
+  ngAfterViewInit() {
+    this.sliderVolunteers = new KeenSlider(this.sliderVolunteersRef.nativeElement, {
+      loop: true,
+      slides: {
+        origin: 'auto'
+      }
     });
   }
 
