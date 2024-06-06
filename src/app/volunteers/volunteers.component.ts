@@ -26,21 +26,22 @@ export class VolunteersComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    
+  }
+
+  ngAfterViewInit() {
+    this.sliderVolunteers = new KeenSlider(this.sliderVolunteersRef.nativeElement, {
+      loop: true,
+      slides: {
+        origin: 'center'
+      }
+    });
+
     this.volunteerService.getVolunteerRealms().subscribe(vRealms => {
-
-      console.log('vRealms: ', vRealms);
-
       for (let i = 0; i < vRealms.length; i++) {
         const realm = vRealms[i];
-        
-        console.log('realm: ', realm.name)
-        console.log('length', (realm.volunteersArray.length));
-        console.log('max emps', this.MAX_EMPS_PER_PAGE);
 
         while(realm.volunteersArray.length / this.MAX_EMPS_PER_PAGE > 1) {
-
-          console.log('splitting')
-
           const precedingChunk = realm.volunteersArray.splice(0, this.MAX_EMPS_PER_PAGE);
           vRealms.splice(i, 0, {
             name: realm.name,
@@ -52,17 +53,6 @@ export class VolunteersComponent implements OnInit {
       }
 
       this.volunteerPages = vRealms;
-
-      this.sliderVolunteers.update();
-    });
-  }
-
-  ngAfterViewInit() {
-    this.sliderVolunteers = new KeenSlider(this.sliderVolunteersRef.nativeElement, {
-      loop: true,
-      slides: {
-        origin: 'center'
-      }
     });
   }
 
