@@ -95,11 +95,14 @@ export class PdfPageComponent implements OnInit, OnChanges {
     }
 
     this.pageNumbers[pdfPage.id] = Array(pagesCount - 1).fill(0).map((x, i) => i + 2);
+
+    this.sliderPdf.update();
   }
 
   RestPagesInitialized() {
-    this.sliderPdf.update();
     window.dispatchEvent(new Event('resize'))
     this.pdfComponents.forEach(pdfComp => pdfComp.pdfViewer.update());
+    
+    this.sliderPdf.update();
   }
 }

@@ -14,7 +14,7 @@ import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 })
 export class VolunteersComponent implements OnInit {
 
-  private readonly MAX_EMPS_PER_PAGE: number = 5;
+  private readonly MAX_EMPS_PER_PAGE: number = 50;
 
   volunteerPages: VolunteerRealm[] = []
 
@@ -52,6 +52,8 @@ export class VolunteersComponent implements OnInit {
       }
 
       this.volunteerPages = vRealms;
+
+      this.sliderVolunteers.update();
     });
   }
 
