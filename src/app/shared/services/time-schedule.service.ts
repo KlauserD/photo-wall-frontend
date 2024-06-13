@@ -76,6 +76,7 @@ export class TimeScheduleService {
   }
 
   public SetPdfTurnoverTimer(seconds: number) {
+    this.turnoverTime = seconds;
     clearTimeout(this.pdfTurnoverTimeout);
     this.pdfTurnoverTimeout = setTimeout(() => this.pdfTurnoverCallback(seconds), seconds * 1000);
   }

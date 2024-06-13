@@ -20,6 +20,7 @@ export class AppComponent {
   title = 'photo-wall-frontend';
 
   readonly FIXED_SLIDES_COUNT = 4;
+  readonly VOLUNTEER_PAGE_DURATION = 8; //s
 
   @ViewChild("sliderRef") sliderRef: ElementRef<HTMLElement> = {} as ElementRef<HTMLElement>;
 
@@ -65,6 +66,10 @@ export class AppComponent {
     this.timeScheduleService.animationStopped$.subscribe(stopped => this.showPauseSymbol = stopped);
   
     this.refreshTimeService.getRefreshTimes().subscribe(times => times.forEach(time => this.refreshAt(time)));
+  }
+
+  setVolunteerShowingTimeForPages(pages: number) {
+    this.slideDetails[2].showingTime = pages * this.VOLUNTEER_PAGE_DURATION;
   }
 
   private refreshAt(refreshTime: Date) {

@@ -33,7 +33,12 @@
         </div>
 
         <div class="keen-slider__slide slide-height">
-          <app-volunteers></app-volunteers>
+          <app-volunteers 
+                [slideNumber]="2"
+                [currentSlideNumber]="currentSlideNumber"
+                [volunteerPageDuration]="VOLUNTEER_PAGE_DURATION"
+                (numPagesDetermined)="setVolunteerShowingTimeForPages($event)"
+                ></app-volunteers>
         </div>
 
         <!-- style="clip-path: xywh(269px 102px 447px 442px)" -->
