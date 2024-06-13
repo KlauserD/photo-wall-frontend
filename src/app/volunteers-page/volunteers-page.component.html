@@ -9,16 +9,17 @@
                     class="img-fluid rounded-start" alt="...">
             </div>
             <div class="card-body py-1 px-2 d-flex flex-column justify-content-between">
-                <b class="text-wrap" 
+                <b class="text-wrap"
                     [style]="'max-width: ' + sizes.pictureWidth + 
                             'px; font-size: ' + sizes.fontSize + 
                             'px; line-height: ' + sizes.lineHeight + 
                             'px; display: block; width: min-content;'">{{volunteer.name}}</b>
-                <span class="card-title text-muted text-nowrap mb-0" 
+                <span class="card-title text-muted mb-0" 
+                        [innerHTML]="volunteer.qualification"
                         [style]="'max-width: ' + sizes.pictureWidth + 
                                 'px; font-size: ' + sizes.fontSize + 
                                 'px; line-height: ' + sizes.lineHeight + 
-                                'px; display: block; width: min-content;'">{{volunteer.qualification}}</span>
+                                'px; display: block; width: min-content;'"></span>
             </div>
         </div>
     </div>
