@@ -66,8 +66,6 @@ export class VolunteersComponent implements OnInit {
         // push last chunk
         realmChunks.push(realm);
 
-        console.log(realmChunks);
-
         // append numeration
         if(realmChunks.length > 1) {
           realmChunks.forEach((realmChunk, idx) => realmChunk.name += ` (${idx + 1}/${realmChunks.length})`);
