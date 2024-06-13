@@ -1,6 +1,6 @@
 <h3 class="text-center">{{title}}</h3>
 <div class="d-flex flex-wrap justify-content-center">
-    <div *ngFor="let volunteer of volunteers" class="card me-3 mb-3 shadow" style="height: max-content; width: 195px;" >
+    <div *ngFor="let volunteer of volunteers" class="card me-3 mb-3 shadow" style="height: max-content; width: 200px;" >
         <div class="d-flex" style="width: max-content;">
             <div>
                 <img [src]="volunteer.pictureUrl" 
@@ -14,7 +14,7 @@
                             'px; font-size: ' + sizes.fontSize + 
                             'px; line-height: ' + sizes.lineHeight + 
                             'px; display: block; width: min-content;'">{{volunteer.name}}</b>
-                <span class="card-title text-muted mb-0" 
+                <span class="card-title text-muted text-nowrap mb-0" 
                         [style]="'max-width: ' + sizes.pictureWidth + 
                                 'px; font-size: ' + sizes.fontSize + 
                                 'px; line-height: ' + sizes.lineHeight + 
