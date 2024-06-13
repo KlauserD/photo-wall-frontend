@@ -37,14 +37,14 @@ export class VolunteersComponent implements OnInit {
   ngOnInit(): void {
     this.volunteerService.getVolunteerRealms().subscribe(vRealms => {
 
-      const rktRealm = vRealms.filter(realm => realm.name == 'RKT')[0];
+      // const rktRealm = vRealms.filter(realm => realm.name == 'RKT')[0];
 
-      let newArray = [];
-      for (let i = 0; i < 15; i++) {
-        newArray.push(...rktRealm.volunteersArray);
-      }
+      // let newArray = [];
+      // for (let i = 0; i < 15; i++) {
+      //   newArray.push(...rktRealm.volunteersArray);
+      // }
 
-      rktRealm.volunteersArray = newArray;
+      // rktRealm.volunteersArray = newArray;
 
       for (let i = 0; i < vRealms.length; i++) {
         const realm = vRealms[i];
