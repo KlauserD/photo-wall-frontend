@@ -8,17 +8,18 @@
                             'px; max-height: ' + sizes.pictureHeight + 'px;'" 
                     class="img-fluid rounded-start" alt="...">
             </div>
-            <div class="card-body py-1 px-2 d-flex flex-column justify-content-between" style="width: max-content;">
+            <div class="card-body py-1 px-2 d-flex flex-column justify-content-between" style="width: min-content;">
                 <b class="text-wrap"
                     [style]="'max-width: ' + sizes.pictureWidth + 
                             'px; font-size: ' + sizes.fontSize + 
                             'px; line-height: ' + sizes.lineHeight + 
                             'px; display: block;'">{{volunteer.name}}</b>
-                <span class="card-title text-muted mb-0" 
+                <div class="card-title text-muted mb-0" 
                         [innerHTML]="volunteer.qualification"
                         [style]="'font-size: ' + sizes.fontSize + 
                                 'px; line-height: ' + sizes.lineHeight + 
-                                'px; display: block;'"></span>
+                                'px; min-width: 115px;' +
+                                'display: block;'"></div>
             </div>
         </div>
     </div>
