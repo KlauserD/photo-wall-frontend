@@ -15,7 +15,7 @@ import { TimeScheduleService } from '../shared/services/time-schedule.service';
 })
 export class VolunteersComponent implements OnInit {
 
-  private readonly MAX_EMPS_PER_PAGE: number = 50;
+  private readonly MAX_EMPS_PER_PAGE: number = 49;
 
   volunteerPages: VolunteerRealm[] = []
 
