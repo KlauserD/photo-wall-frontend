@@ -10,18 +10,18 @@
             </div>
             <div class="card-body py-1 px-2 d-flex flex-column justify-content-between" style="width: min-content;" >
                 
-                <div class="d-flex flex-column">
+                <div class="d-flex flex-column" style="width: min-content;">
                     <b class="text-wrap"
                     [style]="'max-width: ' + sizes.pictureWidth + 
                             'px; font-size: ' + sizes.fontSize + 
                             'px; line-height: ' + sizes.lineHeight + 
                             'px; display: block;'">{{volunteer.name}}</b>
-                <div class="card-title text-muted mt-1 mb-0" 
-                        [innerHTML]="volunteer.qualification"
-                        [style]="'font-size: ' + sizes.fontSize + 
-                                'px; line-height: ' + sizes.lineHeight + 
-                                'px; min-width: 120px;' +
-                                'display: block;'"></div>
+                    <div class="card-title text-muted mt-1 mb-0" 
+                            [innerHTML]="volunteer.qualification"
+                            [style]="'font-size: ' + sizes.fontSize + 
+                                    'px; line-height: ' + sizes.lineHeight + 
+                                    'px; min-width: 120px;' +
+                                    'display: block;'"></div>
                 </div>
                 <b class="mb-0 align-self-end text-muted" [style]="'font-size: ' + sizes.fontSize + 'px'">
                     {{volunteer.department}}
