@@ -11,7 +11,7 @@ export class VolunteersPageComponent implements OnInit {
   @Input() title: string = "";
   @Input() volunteers: Volunteer[] = [];
 
-  sizes = { pictureWidth: 120, pictureHeight: 85, fontSize: 14, lineHeight: 16 };
+  sizes = { pictureWidth: 120, pictureHeight: 100, fontSize: 14, lineHeight: 16 };
 
   constructor() { }
 
