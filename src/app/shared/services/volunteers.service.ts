@@ -19,6 +19,18 @@ export class VolunteersService {
     return of(null);
   }
 
+  private departmentToDepartmentRank(department: string): number {
+    let dptRank = 4;
+    switch (department) {
+      case 'Melk': dptRank = 0; break;
+      case 'Kilb': dptRank = 1; break;
+      case 'St. Leonhard': dptRank = 2; break;
+      case 'Texing': dptRank = 3; break;
+    }
+
+    return dptRank;
+  }
+
   private mapToVolunteerRealm(vRealmObj: any): Observable<VolunteerRealm> {
     let volunteerRealm = vRealmObj['attributes'];
 
@@ -42,7 +54,13 @@ export class VolunteersService {
           (forkJoin(
             (realm.volunteers.data as any[]).map((volunteerObj: any) => this.getVolunteerById(volunteerObj.id))
           ).pipe(
-            map(volunteersArray => {
+            map((volunteersArray: Volunteer[]) => {
+              volunteersArray = volunteersArray.sort((a, b) => {
+
+                return this.departmentToDepartmentRank(a.department) - this.departmentToDepartmentRank(b.department) ||
+                       a.lastname.localeCompare(b.lastname);
+              })
+
               realm.volunteersArray = volunteersArray;
               return realm;
             })

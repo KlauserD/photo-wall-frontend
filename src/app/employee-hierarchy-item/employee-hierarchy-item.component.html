@@ -1,36 +1,20 @@
-<!-- <div class="card" (click)="roleClicked(node)" [style]="node?.isSelected ? 'background-color: rgba(217, 87, 89, 0.153);' : ''">
-    <div class="g-0 card-body">
-        <div class="d-flex flex-wrap">
-            <div *ngIf="showPicture && node?.employee?.pictureUrl" style="max-height: 80px;" class="d-flex align-items-center mb-2 me-2">
-                <img [src]="node?.employee?.pictureUrl" style="max-height: 80px;" class="img-fluid rounded-start" alt="...">
-            </div>
-            <div>
-                <div class="mb-1">
-                    <b class="card-title" style="font-size: 14px;">{{node?.name}}</b>
-                    <div *ngIf="node?.substitution" class="text text-danger" style="font-size: 14px;">Vertretung</div>
-                </div>
-                <div class="text" style="font-size: 14px;">{{node?.employee?.name}}</div>
-            </div>
-        </div>
-    </div>
-    <div *ngIf="node?.children?.length != 0 && node?.hideChildren" class="d-flex justify-content-center">
-        <i class="bi bi-diagram-3 text-success"></i>
-    </div>
-</div> -->
-
+<!-- necessary if node has to be colored:
+ [style]="node?.isColored ? 'background-color: rgba(217, 87, 89, 0.153);' : ''"
+  -->
 <div *ngIf="!node.isPictureCollectionNode" class="card" 
-     (click)="roleClicked(node)" [style]="node?.isSelected ? 'background-color: rgba(217, 87, 89, 0.153);' : ''"
+     (click)="roleClicked(node)"
 >
+
     <div class="d-flex g-0">
         <div *ngIf="showPicture && 
                 node?.employee?.pictureUrl" class="flex-shrink-0">
-            <div style="height: 105px">
-                <img [src]="node?.employee?.pictureUrl" style="height: 105px" class="img-fluid rounded-start" alt="...">
+            <div style="height: 85px">
+                <img [src]="node?.employee?.pictureUrl" style="height: 85px" class="img-fluid rounded-start" alt="...">
             </div>
         </div>
         
         <div class="flex-shrink-1 d-flex flex-column justify-content-between">
-            <div class="card-body p-2 pb-1" style="width: min-content; min-width: 80px; max-width: 140px;">
+            <div class="card-body p-2 pb-1" style="width: min-content; min-width: 100px; max-width: 140px;">
                 <b class="card-title mb-1" style="width: fit-content; font-size: 13px; line-height: 15px; display: block;">{{node?.name}}</b>
                 <div style="width: fit-content; font-size: 12px; line-height: 15px;">{{node?.employee?.name}}</div>
                 <!-- <div class="text" style="font-size: 12px;">{{node?.employee?.name}}</div> -->

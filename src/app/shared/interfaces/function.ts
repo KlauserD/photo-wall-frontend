@@ -8,10 +8,11 @@ export interface Function extends OrgChartTreeNode {
     substitution: boolean,
     superrole: Function,
     depth: number,
-
+    
     isPictureCollectionNode: boolean,
     employeePictures: {name: string, url: string}[], 
 
     children: Function[],
+    realChildren: Function[],
     selector: number
 }

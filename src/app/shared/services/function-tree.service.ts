@@ -34,7 +34,11 @@ export class FunctionTreeService {
     // assign employee by using id
     if(role.employee.data) {
       this.employeesService.getById(role.employee.data.id)
-          .subscribe(emp => (role as Function).employee = emp);
+          .subscribe(emp => {
+              // (role as Function).showPicture = true;
+              (role as Function).employee = emp;
+            
+      });
     }
 
     if(role.employee_photo_collection.data) {
@@ -51,6 +55,7 @@ export class FunctionTreeService {
                 superrole: role,
                 hideChildren: false,
                 children: [],
+                realChildren: [],
                 depth: role.depth + 1,
                 employeePictures: role.employeePictures,
                 isPictureCollectionNode: true,
@@ -85,9 +90,11 @@ export class FunctionTreeService {
         (currentRoleList[i] as Function).children = [];
       }
       
-      if(!currentRoleList[i].depth || currentRoleList[i].depth < currentDepth) currentRoleList[i].depth = currentDepth;
-      
-      currentRoleList[i].hideChildren = true;
+      if(!currentRoleList[i].depth || currentRoleList[i].depth < currentDepth) {
+        currentRoleList[i].depth = currentDepth;
+      }
+
+      currentRoleList[i].hideChildren = false;
     }
   }
 

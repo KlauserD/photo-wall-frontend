@@ -9,8 +9,25 @@
     background-color: none !important;
 }
 
-.color-node {
-    background: rgba(220, 200, 200, 1) !important;
+.color-node-level-1 {
+    /* background: rgb(250, 76, 76) !important; */
+    border-style: solid !important;
+    border-color: red !important;
+    border-width: 1mm !important;
+}
+
+.color-node-level-2 {
+    /* background: rgb(252, 136, 136) !important; */
+    border-style: dashed !important;
+    border-color: red !important;
+    border-width: 0.5mm !important;
+}
+
+.color-node-level-3 {
+    /* background: rgba(252, 192, 192, 0.5) !important; */
+    /* border-style: dotted !important;
+    border-color: black !important;
+    border-width: 0.2mm !important; */
 }
 
 .ng13-org-chart-entity {

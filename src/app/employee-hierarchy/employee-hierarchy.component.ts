@@ -22,14 +22,9 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
   selectorInput: string = "";
   selectorInputResetTimeout: ReturnType<typeof setTimeout> = {} as ReturnType<typeof setTimeout>;
 
-  // employees: Employee[] = [];
   functionTreeRoots: Function[] = [];
 
   selectedRolesWithOriginalSiblings: {role: Function, originalSiblings: Function[]}[] = [];
-  // selectNextTimeout: ReturnType<typeof setTimeout> = {} as ReturnType<typeof setTimeout>;
-
-  // for selecting parent before selecting a sibling
-  // memorisedNextRole: Role | undefined;
 
   constructor(
     private timeScheduleService: TimeScheduleService,
@@ -39,17 +34,89 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.functionService.functionTree$.subscribe(treeRoots => {
       this.functionTreeRoots = treeRoots;
+
       treeRoots.forEach(tree => {
-        this.DoSelectRole(tree);
-        
         this.AssignSelectorNumbers(tree);
-      }); // select roots
+        
+        this.DoSelectRole(tree);
+      });
     });
+  }
+
+  SetHorizontalGrandchildren(tree: Function) {
+    tree.children.forEach(childOfRoot => {
+          
+      childOfRoot.cssClass = 'color-node-level-2';
+      // childOfRoot.isColored = true;
+
+      if(childOfRoot.children.length == 0) return;
+
+      childOfRoot.realChildren = childOfRoot.children;
+      childOfRoot.hideChildren = false;
+
+      let chainedChildren: Function[] = [];
+
+      const childrenPerColumn = Math.max(
+        Math.min(5, Math.ceil(childOfRoot.children.length / 2)),
+        3
+      );
+
+      let i = Math.min(childrenPerColumn - 1, childOfRoot.children.length - 1);
+      let lastCopiedIdx = -1;
+
+      let currentChain: Function | null = null;
+
+      while(i < childOfRoot.children.length) {
+        currentChain = null;
+        let j = i;
+        while (i - j < 5 && j > lastCopiedIdx) {
+          const grandChildOfRoot = childOfRoot.children[j] as Function;
+          
+          grandChildOfRoot.hideChildren = false;
+          grandChildOfRoot.realChildren = [...grandChildOfRoot.children];
+          grandChildOfRoot.cssClass = 'color-node-level-3';
+          // child.isColored = true;
+
+          if(currentChain != null) {
+            grandChildOfRoot.children = [currentChain];
+          } else {
+            grandChildOfRoot.hideChildren = true;
+          }
+
+          currentChain = grandChildOfRoot;
+
+          j--;
+        }
+
+        chainedChildren.push(currentChain as Function);
+
+        if(i >= childOfRoot.children.length - 1) {
+          break;
+        }
+
+        lastCopiedIdx = i;
+        i += Math.min(childrenPerColumn, childOfRoot.children.length - i - 1);
+      }
+
+      childOfRoot.children = chainedChildren;
+    });
+  }
+
+  ResetHorizontalGrandchildren(root: Function) {
+    if(root.realChildren != null) {
+      root.children = [...root.realChildren];
+      // root.isColored = false;
+      root.cssClass = 'normal-node';
+    }
+
+    root.children.forEach(child => {
+      this.ResetHorizontalGrandchildren(child);
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ((changes as any).currentSlideNumber && this.currentSlideNumber == this.slideNumber) {
-      this.functionTreeRoots.forEach(role => this.DoSelectRole(role)); // select roots
+      // this.functionTreeRoots.forEach(role => this.DoSelectRole(role)); // select roots
     }
   }
 
@@ -64,7 +131,9 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
 
   private RecAssignSelectorNumbers(roleTree: Function, currentNumberWrapper: { currentNumber: number }) {
     roleTree.children.forEach(role => {
-      if(role.children.length > 0 || (role as any).employee_photo_collection.data) role.selector = currentNumberWrapper.currentNumber++;
+      if(role.children.length > 0 || (role as any).employee_photo_collection.data) {
+        role.selector = currentNumberWrapper.currentNumber++;
+      }
     })
 
     roleTree.children.forEach(role => this.RecAssignSelectorNumbers(role, currentNumberWrapper));
@@ -97,74 +166,7 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
         this.selectorInput = "";
       }
     }
-
-    // if(this.currentSlideNumber === this.slideNumber && event.key === 'ArrowDown') {
-    //   this.SelectNextRole();
-    // }
   }
-
-  // ResetNotTouchedTimeout() {
-  //   this.StopTimeout();
-  //   console.log('starting not touched timeout');
-  //   // this.selectNextTimeout = setTimeout(() => this.SelectNextRole(), this.NOT_TOUCHED_TIMEOUT);
-  // }
-
-  // ResetNextNodeTimeout() {
-  //   this.StopTimeout();
-  //   console.log('starting next node timeout');
-  //   // this.selectNextTimeout = setTimeout(() => this.SelectNextRole(), this.SELECT_NEXT_NODE_TIMEOUT);
-  // }
-
-  // StopTimeout() {
-  //   console.log('stopping timeout');
-  //   clearTimeout(this.selectNextTimeout);
-  // }
-
-  // SelectNextRole() {
-  //   let currSelectedRole = this.selectedRolesWithOriginalSiblings[this.selectedRolesWithOriginalSiblings.length - 1]?.role;
-  //   let nextRole = this.memorisedNextRole ??
-  //     this.FindNextExpandableNode(this.roleTreeRoots[0], currSelectedRole, {b: false});
-    
-  //   if(nextRole == undefined) nextRole = this.roleTreeRoots[0];
-
-  //   if(currSelectedRole && nextRole.depth <= currSelectedRole.depth) {
-  //     this.memorisedNextRole = nextRole;
-  //     nextRole = currSelectedRole.superrole;
-  //   }
-
-  //   if(nextRole == this.memorisedNextRole) {
-  //     this.memorisedNextRole = undefined;
-  //   }
-
-  //   if(!nextRole) {
-  //     this.StopTimeout();
-  //   } else {
-  //     this.DoSelectRole(nextRole);
-  //     this.ResetNextNodeTimeout();
-  //   }
-  // }
-
-  // FindNextExpandableNode(parent: Role, current: Role, foundCurr: {b: boolean}): Role | undefined {
-  //   if(foundCurr.b && parent.children.length != 0)  return parent;
-    
-  //   if(current == parent) {
-  //     foundCurr.b = true;
-  //   }
-
-  //   if(parent.children.length != 0) {
-  //     let children = this.selectedRolesWithOriginalSiblings
-  //       .find(rws => rws.role.superrole == parent)
-  //       ?.originalSiblings
-  //       ?? parent.children;
-
-  //     for (let i = 0; i < children.length; i++) {
-  //       let child = children[i];
-  //       let res = this.FindNextExpandableNode(child, current, foundCurr);
-  //       if(res != undefined) return res;
-  //     }
-  //   }
-  //   return undefined;
-  // }
 
   private FindRoleForSelector(selector: number): Function | null {
     return this.RecFindRoleForSelector(this.functionTreeRoots[0], selector);
@@ -190,41 +192,64 @@ export class EmployeeHierarchyComponent implements OnInit, OnChanges {
   DoSelectRole(selectedRole: Function) {
     if(selectedRole.children.length == 0) return; // no action when no children to display
 
-    let currSelectedRole = this.selectedRolesWithOriginalSiblings[this.selectedRolesWithOriginalSiblings.length - 1]?.role;
+    let currSelectedRole = this.selectedRolesWithOriginalSiblings[this.selectedRolesWithOriginalSiblings.length - 1]?.role as Function;
 
     if(this.selectedRolesWithOriginalSiblings.length > 0 &&
         selectedRole == currSelectedRole) { // clicked on currently selected role
-      if(selectedRole.superrole) {
-        this.DoSelectRole(selectedRole.superrole);
-      }
+      // if(selectedRole.superrole) {
+      //   this.DoSelectRole(selectedRole.superrole);
+      // }
     } else {
+      this.ResetHorizontalGrandchildren(this.functionTreeRoots[0]);
+
       if(currSelectedRole?.isSelected) {
         currSelectedRole.isSelected = false;
         currSelectedRole.cssClass = 'normal-node';
 
         while(currSelectedRole && this.IsDescendent(currSelectedRole, selectedRole)) {
-
           const selectedRoleWithSiblings = (this.selectedRolesWithOriginalSiblings.pop() as {role: Function, originalSiblings: Function[]});
           this.GiveBackSiblings(selectedRoleWithSiblings.role, selectedRoleWithSiblings.originalSiblings);
 
-          currSelectedRole = this.selectedRolesWithOriginalSiblings[this.selectedRolesWithOriginalSiblings.length - 1]?.role;
+          currSelectedRole = selectedRoleWithSiblings.role;
         }
       }
       selectedRole.isSelected = true;
-      selectedRole.cssClass = 'color-node';
+      selectedRole.cssClass = 'color-node-level-1';
 
       this.HideAllDescendants(selectedRole);
-      const originialSiblings = this.HideAllSiblings(selectedRole);
 
-      this.selectedRolesWithOriginalSiblings.push({role: selectedRole, originalSiblings: originialSiblings});
-  
+      const pathToSelectedRole = [];
+      let tmpRole = selectedRole.superrole;
+      while(tmpRole != currSelectedRole && this.IsDescendent(tmpRole, currSelectedRole)) {
+        console.log('while. tmpRole: ' + tmpRole);
+        pathToSelectedRole.push(tmpRole);
+        tmpRole = tmpRole.superrole;
+      }
+
+      // console.log('path: ' + pathToSelectedRole.length + ', ' + pathToSelectedRole);
+
+      while(pathToSelectedRole.length > 0) {
+        const nextRoleDownwards = pathToSelectedRole.pop() as Function;
+
+        const originialSiblings = this.HideAllSiblings(nextRoleDownwards);
+        
+        this.selectedRolesWithOriginalSiblings.push({role: nextRoleDownwards, originalSiblings: originialSiblings});
+        nextRoleDownwards.hideChildren = false;
+      }
+
+      this.selectedRolesWithOriginalSiblings.push({role: selectedRole, originalSiblings: this.HideAllSiblings(selectedRole)});
+
+      // console.log(this.selectedRolesWithOriginalSiblings);
+
+      this.SetHorizontalGrandchildren(selectedRole);
+
       selectedRole.hideChildren = false;
     }
   }
 
   IsDescendent(questionableDescendant: Function, role: Function): boolean {
     let currentRole: Function;
-    currentRole = questionableDescendant.superrole;
+    currentRole = questionableDescendant?.superrole;
 
     while(currentRole) { // not undefined
       if(currentRole == role) return true;
