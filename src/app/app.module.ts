@@ -16,6 +16,10 @@ import { TimedProgressBarComponent } from './timed-progress-bar/timed-progress-b
 import { EmployeeHierarchyChildrenContainerComponent } from './employee-hierarchy-children-container/employee-hierarchy-children-container.component';
 import { VolunteersComponent } from './volunteers/volunteers.component';
 import { VolunteersPageComponent } from './volunteers-page/volunteers-page.component';
+import { MainComponent } from './main/main.component';
+import { AuthComponent } from './auth/auth.component';
+import { AuthConfirmComponent } from './auth-confirm/auth-confirm.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,14 +31,18 @@ import { VolunteersPageComponent } from './volunteers-page/volunteers-page.compo
     TimedProgressBarComponent,
     EmployeeHierarchyChildrenContainerComponent,
     VolunteersComponent,
-    VolunteersPageComponent
+    VolunteersPageComponent,
+    MainComponent,
+    AuthComponent,
+    AuthConfirmComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     OrgChartModule,
-    PdfViewerModule
+    PdfViewerModule,
+    FormsModule
   ],
   providers: [
     {

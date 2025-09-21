@@ -1,0 +1,20 @@
+<div *ngIf="invalidToken" class="alert alert-danger" role="alert">
+  Ungültiger Link!
+</div>
+
+<div *ngIf="!invalidToken" class="p-3" style="height: 80vh; width: 100vw">
+    <h2 class="text-center">Authentifizierung bestätigen!</h2>
+
+    <div class="d-flex flex-column h-100 justify-content-center align-items-center">
+        <input [(ngModel)]="pwInput" class="text-center form-control" style="height: 40px; width: 300px;" name="xy"  type="password" >
+        <button type="button" class="btn btn-secondary mt-2" (click)="Confirm()">Bestätigen</button>
+    </div>
+
+    <div *ngIf="authStatus === 'success'" class="alert alert-success" role="alert">
+        Authentifizierung erfolgreich!
+    </div>
+
+    <div *ngIf="authStatus === 'cooldown'" class="alert alert-warning" role="alert">
+        Nach erfolgloser Eingabe muss 15 Sekunden gewartet werden.
+    </div>
+</div>
