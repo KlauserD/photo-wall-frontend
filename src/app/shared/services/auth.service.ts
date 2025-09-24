@@ -8,12 +8,18 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthService {
 
+  private apiToken: string = "";
+
   constructor(private http: HttpClient) { 
   }
 
   private errorHandler(error: Error | any): Observable<any> {
     console.log(error);
     return of(null);
+  }
+
+  GetApiToken(): string {
+    return this.apiToken;
   }
 
   /* section for handling foreign authentication (e.g. using smartphone to scan QR-Code) */
@@ -63,5 +69,14 @@ export class AuthService {
       .pipe(
         catchError(this.errorHandler)
     );
+  }
+
+  FetchApiToken(): Observable<string> {
+    return this.http.get(
+      `${environment.server}/app-auth-token/getApiToken/${this.GetOwnAppIdToken()}`,
+      { responseType: 'text'}
+    ).pipe(
+      tap(apiToken => this.apiToken = apiToken)
+    )
   }
 }
