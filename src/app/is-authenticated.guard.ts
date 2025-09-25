@@ -22,12 +22,11 @@ export class IsAuthenticatedGuard implements CanActivate {
                 map(() => true) // erst nach erfolgreichem Token-Fetch darf aktiviert werden
               );
             } else {
-              return of(
-                this.router.createUrlTree(
+              this.router.navigate(
                   ['/auth'],
                   { queryParams: { returnUrl: state.url } }
-                )
-              );
+                );
+              return of(false);
             }
           })
         );
