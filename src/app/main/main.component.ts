@@ -1,10 +1,11 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 import { PdfPage } from '../shared/interfaces/pdf-page';
 import { PdfPageService } from '../shared/services/pdf-page.service';
 import { RefreshTimeService } from '../shared/services/refresh-time.service';
 import { SingleTypesService } from '../shared/services/single-types.service';
 import { TimeScheduleService } from '../shared/services/time-schedule.service';
+import { DynamicUpdateService } from '../shared/services/dynamic-update.service';
 
 @Component({
   selector: 'app-main',
@@ -35,8 +36,10 @@ export class MainComponent implements OnInit {
 
   constructor(
     private pdfService: PdfPageService,
+    private changeDetectionRef: ChangeDetectorRef,
     private timeScheduleService: TimeScheduleService,
     private singleTypesService: SingleTypesService,
+    private dynUpdate: DynamicUpdateService,
     private refreshTimeService: RefreshTimeService
   ) {
     // default values
