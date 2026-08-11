@@ -23,6 +23,7 @@ export class AuthComponent implements OnInit, AfterContentInit {
   ) { 
     this.appIdToken = authService.GetOwnAppIdToken();
   }
+  
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: Params)=> {
       this.returnUrl = params['returnUrl'];

@@ -5,12 +5,18 @@ import { AuthComponent } from './auth/auth.component';
 import { AuthConfirmComponent } from './auth-confirm/auth-confirm.component';
 import { IsAuthenticatedGuard } from './is-authenticated.guard';
 import { IsUnauthenticatedGuard } from './is-unauthenticated.guard';
+import { GarageComponent } from './garage/garage.component';
 
 const routes: Routes = [
   {
    path: '',
    component: MainComponent,
    canActivate: [IsAuthenticatedGuard]
+  },
+  {
+    path: 'garage',
+    component: GarageComponent,
+    // canActivate: [IsAuthenticatedGuard]
   },
   {
    path: 'auth',

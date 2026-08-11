@@ -89,6 +89,8 @@ export class TimeScheduleService {
   /* slide timer */
 
   public SetSlideTimer(seconds: number) {
+    if(seconds == null) return;
+
     this.initialSlideTime = seconds * 1000;
 
     if(this.slideTimer?.cancel) {

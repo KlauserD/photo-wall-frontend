@@ -1,33 +1,29 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 import { PdfPage } from '../shared/interfaces/pdf-page';
 import { PdfPageService } from '../shared/services/pdf-page.service';
-import { RefreshTimeService } from '../shared/services/refresh-time.service';
-import { SingleTypesService } from '../shared/services/single-types.service';
 import { TimeScheduleService } from '../shared/services/time-schedule.service';
+import { RefreshTimeService } from '../shared/services/refresh-time.service';
 
 @Component({
-  selector: 'app-main',
-  templateUrl: './main.component.html',
+  selector: 'app-garage',
+  templateUrl: './garage.component.html',
   styleUrls: [
-    './main.component.css',
+    './garage.component.css',
     "../../../node_modules/keen-slider/keen-slider.min.css"
   ]
 })
-export class MainComponent implements OnInit {
-  title = 'photo-wall-frontend';
+export class GarageComponent implements OnInit {
 
-  readonly FIXED_SLIDES_COUNT = 4;
-  readonly VOLUNTEER_PAGE_DURATION = 8; //s
+  readonly FIXED_SLIDES_COUNT = 0;
 
   @ViewChild("sliderRef") sliderRef: ElementRef<HTMLElement> = {} as ElementRef<HTMLElement>;
-
   slider: KeenSliderInstance = {} as KeenSliderInstance;
   currentSlideNumber: number = 0;
   dotSlideIdxArray: number[] = [];
-
-  pdfPages: PdfPage[] = [];
   
+  pdfPages: PdfPage[] = [];
+
   slideDetails: {title: string, showingTime: number}[] = [];
 
   showNavbar: boolean = false;
@@ -36,18 +32,8 @@ export class MainComponent implements OnInit {
   constructor(
     private pdfService: PdfPageService,
     private timeScheduleService: TimeScheduleService,
-    private singleTypesService: SingleTypesService,
     private refreshTimeService: RefreshTimeService
-  ) {
-    // default values
-    this.slideDetails[0] = {title: 'Organigramm', showingTime: 20}; // employee hierarchy
-    this.slideDetails[1] = {title: 'ZD/FSJ-Turnus', showingTime: 20}; // ZD/FSJ
-    this.slideDetails[2] = {title: 'Ehrenamtliche Mitarbeiter', showingTime: 20}; // volunteers
-    this.slideDetails[3] = {title: 'PV Anlage', showingTime: 15}; // Fronius
-
-    singleTypesService.getHierarchyShowingTime().subscribe(seconds => { if(seconds != null) this.slideDetails[0].showingTime = seconds; });
-    singleTypesService.getZdFsjShowingTime().subscribe(seconds => { if(seconds != null) this.slideDetails[1].showingTime = seconds; });
-
+  ) { 
     this.pdfService.getPdfPages().subscribe(pwps => {
       this.pdfPages = pwps; // this.preparePdfDocArrays(pwp);
       setTimeout(() => this.slider.update(), 200);
@@ -56,16 +42,15 @@ export class MainComponent implements OnInit {
       pwps.forEach((pwp, i) => this.slideDetails[i + this.FIXED_SLIDES_COUNT] = {title: pwp.title, showingTime: pwp.totalShowingTime}); // photowall pages
     });
 
-    this.timeScheduleService.slideTimerExpired$.subscribe(() => this.moveToNextSlide());
+      this.timeScheduleService.slideTimerExpired$.subscribe(() => this.moveToNextSlide());
 
-    this.timeScheduleService.showNavbar$.subscribe(show => this.showNavbar = show);
-    this.timeScheduleService.animationStopped$.subscribe(stopped => this.showPauseSymbol = stopped);
-  
-    this.refreshTimeService.getRefreshTimes().subscribe(times => times.forEach(time => this.refreshAt(time)));
+      this.timeScheduleService.showNavbar$.subscribe(show => this.showNavbar = show);
+      this.timeScheduleService.animationStopped$.subscribe(stopped => this.showPauseSymbol = stopped);
+
+      this.refreshTimeService.getRefreshTimes().subscribe(times => times.forEach(time => this.refreshAt(time)));
   }
 
-  setVolunteerShowingTimeForPages(pages: number) {
-    this.slideDetails[2].showingTime = pages * this.VOLUNTEER_PAGE_DURATION;
+  ngOnInit(): void {
   }
 
   private refreshAt(refreshTime: Date) {
@@ -89,9 +74,6 @@ export class MainComponent implements OnInit {
     setTimeout(() => window.location.reload(), timeout);
   }
 
-  ngOnInit(): void {
-  }
-
   ngAfterViewInit() {
     this.slider = new KeenSlider(this.sliderRef.nativeElement, {
       loop: true,
@@ -99,7 +81,7 @@ export class MainComponent implements OnInit {
       slides: {
         origin: "center",
       },
-      created: () => this.timeScheduleService.SetSlideTimer(this.slideDetails[this.currentSlideNumber].showingTime),
+      created: () => this.timeScheduleService.SetSlideTimer(this.slideDetails[this.currentSlideNumber]?.showingTime),
       slideChanged: (s) => {
         this.currentSlideNumber = s.track?.details?.rel;
         this.timeScheduleService.SetSlideTimer(this.slideDetails[this.currentSlideNumber].showingTime);
@@ -111,6 +93,7 @@ export class MainComponent implements OnInit {
   ngOnDestroy() {
     if (this.slider) this.slider.destroy()
   }
+
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {

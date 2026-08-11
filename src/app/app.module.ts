@@ -20,6 +20,7 @@ import { MainComponent } from './main/main.component';
 import { AuthComponent } from './auth/auth.component';
 import { AuthConfirmComponent } from './auth-confirm/auth-confirm.component';
 import { FormsModule } from '@angular/forms';
+import { GarageComponent } from './garage/garage.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { FormsModule } from '@angular/forms';
     VolunteersPageComponent,
     MainComponent,
     AuthComponent,
-    AuthConfirmComponent
+    AuthConfirmComponent,
+    GarageComponent
   ],
   imports: [
     BrowserModule,
