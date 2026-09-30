@@ -25,7 +25,7 @@ export class AuthComponent implements OnInit, AfterContentInit {
   }
   
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe((params: Params)=> {
+    this.activatedRoute.queryParams.subscribe((params: Params)=> {
       this.returnUrl = params['returnUrl'];
     })
   }
@@ -44,8 +44,6 @@ export class AuthComponent implements OnInit, AfterContentInit {
     this.authService.CheckAuthenticationStatus().subscribe(success => {
       if(success) {
         const route = this.returnUrl != null ? this.returnUrl as string : '';
-
-        console.log(route);
 
         this.router.navigate([route])
       } else {
