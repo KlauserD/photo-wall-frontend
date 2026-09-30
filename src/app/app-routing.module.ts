@@ -16,7 +16,7 @@ const routes: Routes = [
   {
     path: 'garage',
     component: GarageComponent,
-    // canActivate: [IsAuthenticatedGuard]
+    canActivate: [IsAuthenticatedGuard]
   },
   {
    path: 'auth',

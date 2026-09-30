@@ -34,20 +34,26 @@ export class GarageComponent implements OnInit {
     private timeScheduleService: TimeScheduleService,
     private refreshTimeService: RefreshTimeService
   ) { 
-    this.pdfService.getPdfPages().subscribe(pwps => {
+    this.pdfService.getGaragePdfPages().subscribe(pwps => {
       this.pdfPages = pwps; // this.preparePdfDocArrays(pwp);
       setTimeout(() => this.slider.update(), 200);
       this.dotSlideIdxArray = Array(this.pdfPages.length + this.FIXED_SLIDES_COUNT).fill(0).map((x, i) => i)
 
       pwps.forEach((pwp, i) => this.slideDetails[i + this.FIXED_SLIDES_COUNT] = {title: pwp.title, showingTime: pwp.totalShowingTime}); // photowall pages
+    
+      if(this.slideDetails.length > 1) {
+        this.slider.options.loop = true;
+
+        this.timeScheduleService.SetSlideTimer(this.slideDetails[this.currentSlideNumber].showingTime)
+      }
     });
 
-      this.timeScheduleService.slideTimerExpired$.subscribe(() => this.moveToNextSlide());
+    this.timeScheduleService.slideTimerExpired$.subscribe(() => this.moveToNextSlide());
 
-      this.timeScheduleService.showNavbar$.subscribe(show => this.showNavbar = show);
-      this.timeScheduleService.animationStopped$.subscribe(stopped => this.showPauseSymbol = stopped);
+    this.timeScheduleService.showNavbar$.subscribe(show => this.showNavbar = show);
+    this.timeScheduleService.animationStopped$.subscribe(stopped => this.showPauseSymbol = stopped);
 
-      this.refreshTimeService.getRefreshTimes().subscribe(times => times.forEach(time => this.refreshAt(time)));
+    this.refreshTimeService.getRefreshTimes().subscribe(times => times.forEach(time => this.refreshAt(time)));
   }
 
   ngOnInit(): void {
@@ -76,7 +82,7 @@ export class GarageComponent implements OnInit {
 
   ngAfterViewInit() {
     this.slider = new KeenSlider(this.sliderRef.nativeElement, {
-      loop: true,
+      loop: false,
       initial: this.currentSlideNumber,
       slides: {
         origin: "center",

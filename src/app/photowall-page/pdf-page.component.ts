@@ -47,10 +47,21 @@ export class PdfPageComponent implements OnInit, OnChanges {
         origin: 'auto'
       }
     });
+
+    if (this.currentSlideNumber == this.slideNumber) {
+      this.SlideHasAppeared();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ((changes as any).currentSlideNumber && this.currentSlideNumber == this.slideNumber) {
+    if ((changes as any).currentSlideNumber && this.currentSlideNumber == this.slideNumber) {   
+      this.SlideHasAppeared();
+    }
+  }
+
+  private SlideHasAppeared() {
+    // synchronise the loading of pdf pages and initialization of sliderPdf
+    if(this.sliderPdf.moveToIdx && Object.keys(this.pageNumbers).length !== 0) {
       this.sliderPdf.moveToIdx(0);
 
       const pdfLength = this.pageNumbers[this.pdfPage.id].length + 1;
@@ -97,6 +108,7 @@ export class PdfPageComponent implements OnInit, OnChanges {
     this.pageNumbers[pdfPage.id] = Array(pagesCount - 1).fill(0).map((x, i) => i + 2);
 
     this.sliderPdf.update();
+    this.SlideHasAppeared();
   }
 
   RestPagesInitialized() {

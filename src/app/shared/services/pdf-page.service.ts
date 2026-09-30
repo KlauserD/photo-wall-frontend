@@ -40,4 +40,17 @@ export class PdfPageService {
         catchError(this.errorHandler)
       );
   }
+
+  getGaragePdfPages(): Observable<Array<PdfPage>> {
+    return this.http.get<any>(
+      `${environment.server}/garage-pdf-pages`, {
+        params: { 
+          populate: '*'
+        }
+      }).pipe(
+        map(res => res['data']),
+        switchMap(data => Promise.all(data.map(async (zdObj: any) => await this.mapToPdfPage(zdObj)))),
+        catchError(this.errorHandler)
+      );
+  }
 }
