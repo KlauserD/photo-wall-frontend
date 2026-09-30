@@ -45,6 +45,8 @@ export class AuthComponent implements OnInit, AfterContentInit {
       if(success) {
         const route = this.returnUrl != null ? this.returnUrl as string : '';
 
+        console.log(route);
+
         this.router.navigate([route])
       } else {
         setTimeout(() => this.checkAuthentication(), 10000);
