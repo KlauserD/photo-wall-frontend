@@ -70,6 +70,8 @@ export class VolunteersService {
   }
 
   getVolunteerRealms(): Observable<Array<VolunteerRealm>> {
+    console.log('GET VOLUNTEER REALMS');
+
     return this.http.get<any>(
       `${environment.server}/volunteer-realms`, {
         params: { 
